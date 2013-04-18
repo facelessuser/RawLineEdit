@@ -5,7 +5,7 @@ RawLineEdit
 View and edit line endings in Sublime Text.  RawLineEdit displays line endings very clearly and allows changing the line endings per line (something sublime text doesn't allow out of the box).
 
 # Usage
-Toggle current view to a "RawLineEdit" view via the command palette command ```Raw Line Edit: Toggle``` (you can setup your own keybinding or add it your context menu if choose)
+Toggle current view to a "RawLineEdit" view via the command palette command ```Raw Line Edit: Toggle``` (you can setup your own keybinding or add it to your context menu if you choose)
 
 Using ```Enter``` key you can change Windows style line endings to Unix or use ```Shift+Enter``` to do the opposite.  Select multiple lines to change more than one line.
 
