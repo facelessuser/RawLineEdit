@@ -1,0 +1,9 @@
+[
+    //////////////////////////////////
+    // Raw Line Edit
+    //////////////////////////////////
+    {
+        "caption": "Raw Line Edit: Toggle",
+        "command": "toggle_raw_line_edit"
+    }
+]

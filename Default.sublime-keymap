@@ -1,0 +1,27 @@
+[
+    //////////////////////////////////
+    // Raw Line Edit
+    //////////////////////////////////
+    {
+        "keys": ["enter"],
+        "command": "raw_line_insert",
+        "context":
+        [
+            {
+                "key": "raw_line_edit"
+            }
+        ],
+        "args": { "style": "Unix" }
+    },
+    {
+        "keys": ["shift+enter"],
+        "command": "raw_line_insert",
+        "context":
+        [
+            {
+                "key": "raw_line_edit"
+            }
+        ],
+        "args": { "style": "Windows" }
+    }
+]

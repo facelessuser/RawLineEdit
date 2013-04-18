@@ -1,0 +1,11 @@
+{
+    // Use a glyph for a visual representation
+    // for newlines
+    "use_newline_glyph": true,
+
+    // Use the raw line edit theme to allow
+    // a view that highlights only new lines
+    // and carriage returns for easy visualization.
+    // (Colors customizable via your color scheme file)
+    "use_raw_line_edit_theme": true
+}
