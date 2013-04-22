@@ -11,5 +11,5 @@
 
     // View only mode: pops up a output panel showing line endings.
     // No editing possible.
-    "view_only": true
+    "view_only": false
 }
