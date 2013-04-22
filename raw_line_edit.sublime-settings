@@ -7,5 +7,9 @@
     // a view that highlights only new lines
     // and carriage returns for easy visualization.
     // (Colors customizable via your color scheme file)
-    "use_raw_line_edit_theme": true
+    "use_raw_line_edit_theme": true,
+
+    // View only mode: pops up a output panel showing line endings.
+    // No editing possible.
+    "view_only": true
 }

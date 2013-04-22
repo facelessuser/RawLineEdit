@@ -38,6 +38,9 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
     def use_theme(self):
         return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_raw_line_edit_theme", False))
 
+    def view_only(self):
+        return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("view_only", False))
+
     def disable_rle(self, edit, file_name):
         if self.view.is_dirty():
             if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
@@ -78,13 +81,44 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             self.view.set_scratch(True)
             self.view.set_read_only(True)
 
+    def popup_rle(self, file_name):
+        if self.view.is_dirty():
+            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
+                self.view.run_command("save")
+        view = self.view.window().get_output_panel('raw_line_edit_view')
+        try:
+            with codecs.open(file_name, "r", "utf-8") as f:
+                view.set_read_only(False)
+                use_glyph = self.use_newline_glyph()
+                RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
+                if use_glyph:
+                    RawLinesEditReplaceCommand.text = add_newline_glyph(f.read())
+                else:
+                    RawLinesEditReplaceCommand.text = f.read()
+                view.run_command("raw_lines_edit_replace")
+                view.sel().clear()
+                view.set_syntax_file(self.view.settings().get('syntax') if not self.use_theme() else "Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
+                view.settings().set("RawLineEditSyntax", self.view.settings().get('syntax'))
+                view.settings().set("RawLineEditGlyph", use_glyph)
+                view.settings().set("RawLineEdit", True)
+                view.settings().set("RawLineEditFilename", file_name)
+                view.settings().set("RawLineEditPopup", True)
+                self.view.set_scratch(True)
+                view.set_read_only(True)
+                self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
+        except Exception as e:
+            print(e)
+            self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
+
     def run(self, edit):
         file_name = self.view.file_name()
-        if file_name is not None or self.view.settings().get("RawLineEdit", False):
+        if (file_name is not None or self.view.settings().get("RawLineEdit", False)) and not self.view.settings().get('RawLineEditPopup', False):
             if self.view.settings().get("RawLineEdit", False):
                 self.disable_rle(edit, file_name)
-            else:
+            elif not self.view_only():
                 self.enable_rle(edit, file_name)
+            else:
+                self.popup_rle(file_name)
 
 
 class RawLineInsertCommand(sublime_plugin.TextCommand):
@@ -115,7 +149,7 @@ class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
 
 class RawLineEditListener(sublime_plugin.EventListener):
     def on_pre_save(self, view):
-        if view.settings().get("RawLineEdit", False):
+        if view.settings().get("RawLineEdit", False) and not view.settings().get('RawLineEditPopup', False):
             use_glyph = view.settings().get("RawLineEditGlyph")
             RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
             if use_glyph:
@@ -127,7 +161,7 @@ class RawLineEditListener(sublime_plugin.EventListener):
             view.set_read_only(True)
 
     def on_post_save(self, view):
-        if view.settings().get("RawLineEdit", False):
+        if view.settings().get("RawLineEdit", False) and not view.settings().get('RawLineEditPopup', False):
             use_glyph = view.settings().get("RawLineEditGlyph")
             RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
             if use_glyph:
@@ -142,6 +176,6 @@ class RawLineEditListener(sublime_plugin.EventListener):
 
     def on_query_context(self, view, key, operator, operand, match_all):
         handeled = False
-        if view.settings().get("RawLineEdit", False) and key.startswith("raw_line_edit"):
+        if view.settings().get("RawLineEdit", False) and key.startswith("raw_line_edit") and not view.settings().get('RawLineEditPopup', False):
             handeled = True
         return handeled
