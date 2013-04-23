@@ -5,5 +5,9 @@
     {
         "caption": "Raw Line Edit: Toggle",
         "command": "toggle_raw_line_edit"
+    },
+    {
+        "caption": "Raw Line Edit: View Line Endings",
+        "command": "popup_raw_line_edit"
     }
 ]
