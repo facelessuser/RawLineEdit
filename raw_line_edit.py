@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Raw Line Edit
 Licensed under MIT
@@ -10,7 +12,7 @@ from os.path import basename
 
 import re
 
-new_line = "¬"
+new_line = u"¬"
 
 
 def strip_newline_glyph(text):
