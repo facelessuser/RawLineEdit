@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
+
 """
 Raw Line Edit
 Licensed under MIT
 Copyright (c) 2013 Isaac Muse <isaacmuse@gmail.com>
 """
+from __future__ import unicode_literals
 import sublime
 import sublime_plugin
 import codecs
