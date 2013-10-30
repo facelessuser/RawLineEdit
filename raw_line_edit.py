@@ -42,6 +42,25 @@ def use_theme():
     return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_raw_line_edit_theme", False))
 
 
+def get_encoding(view):
+    encoding = view.encoding()
+    mapping = [
+        ("with BOM", ""),
+        ("Windows", "cp"),
+        ("-", "_"),
+        (" ", "")
+    ]
+    encoding = view.encoding()
+    m = re.match(r'.+\((.*)\)', encoding)
+    if m is not None:
+        encoding = m.group(1)
+
+    for item in mapping:
+        encoding = encoding.replace(item[0], item[1])
+
+    return "utf_8" if encoding in ["Undefined", "Hexidecimal"] else encoding
+
+
 class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
     def disable_rle(self, edit, file_name):
         if self.view.is_dirty():
@@ -67,7 +86,14 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         if self.view.is_dirty():
             if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
                 self.view.run_command("save")
-        with codecs.open(file_name, "r", "utf-8") as f:
+        encoding = get_encoding(self.view)
+        try:
+            self.show_rle(edit, file_name, encoding)
+        except:
+            self.show_rle(edit, file_name, "utf-8")
+
+    def show_rle(self, edit, file_name, encoding):
+        with codecs.open(file_name, "r", encoding) as f:
             use_glyph = use_newline_glyph()
             if use_glyph:
                 self.view.replace(edit, sublime.Region(0, self.view.size()), add_newline_glyph(f.read()))
@@ -100,9 +126,16 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         if self.view.is_dirty():
             if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
                 self.view.run_command("save")
-        view = self.view.window().get_output_panel('raw_line_edit_view')
+        encoding = get_encoding(self.view)
         try:
-            with codecs.open(file_name, "r", "utf-8") as f:
+            self.show_rle(file_name, encoding)
+        except:
+            self.show_rle(file_name, "utf-8")
+
+    def show_rle(self, file_name, encoding):
+        try:
+            view = self.view.window().get_output_panel('raw_line_edit_view')
+            with codecs.open(file_name, "r", encoding) as f:
                 view.set_read_only(False)
                 use_glyph = use_newline_glyph()
                 RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
@@ -121,9 +154,9 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                 self.view.set_scratch(True)
                 view.set_read_only(True)
                 self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
-        except Exception as e:
-            print(e)
+        except:
             self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
+            raise
 
     def is_enabled(self):
         return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("view_only", False))
