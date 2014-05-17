@@ -9,7 +9,6 @@ from __future__ import unicode_literals
 import sublime
 import sublime_plugin
 import codecs
-from os.path import basename
 
 import re
 
