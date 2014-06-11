@@ -11,5 +11,13 @@
 
     // View only mode: pops up a output panel showing line endings.
     // No editing possible.
-    "view_only": false
+    "view_only": false,
+
+    // Operate on sublime unsaved view buffer
+    // Instead of reading the file from disk,
+    // The file will be read directly from the buffer
+    // In these cases the line endings will be normalized,
+    // but you can edit them and save them back to disk.
+    // Not sure how useful this is.
+    "operate_on_unsaved_buffers": false
 }
