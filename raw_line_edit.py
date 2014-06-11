@@ -227,7 +227,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             else:
                 # Convert the unsaved buffer
                 if convert_buffers():
-                    sublime.message_dialog("Raw Line Edit:\nConverting sublime view buffer... ")
+                    sublime.status_message("Converting sublime view buffer... ")
                     self.enable_buffer_rle(edit, file_name)
                     return
                 else:
@@ -235,7 +235,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
                         sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
                         return
                     else:
-                        sublime.message_dialog("Raw Line Edit:\nDiscarding changes and reading from disk...")
+                        sublime.status_message("Discarding changes and reading from disk...")
 
         if file_name is None:
             sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
@@ -373,7 +373,7 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
             else:
                 # Convert the unsaved buffer
                 if convert_buffers():
-                    sublime.message_dialog("Raw Line Edit:\nConverting sublime view buffer... ")
+                    sublime.status_message("Converting sublime view buffer... ")
                     self.enable_buffer_rle(file_name)
                     return
                 else:
@@ -381,7 +381,7 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                         sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
                         return
                     else:
-                        sublime.message_dialog("Raw Line Edit:\nDiscarding changes and reading from disk...")
+                        sublime.status_message("Discarding changes and reading from disk...")
 
         if file_name is None:
             sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
