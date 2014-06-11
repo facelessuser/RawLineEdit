@@ -172,7 +172,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
 
         # Save raw line ending changes
         if self.view.is_dirty():
-            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
+            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?", "Save"):
                 self.view.run_command("save")
 
         # Get the settings
@@ -220,8 +220,12 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         Enable raw line ending mode
         """
 
-        if self.view.is_dirty():
-            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
+        if self.view.is_dirty(): 
+            if convert_buffers():
+                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
+            else:
+                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
+            if sublime.ok_cancel_dialog(msg, "Save"):
                 # Save the file
                 self.view.run_command("save")
             else:
@@ -315,7 +319,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         """
 
         if self.view.is_dirty():
-            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
+            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?", "Save"):
                 self.view.run_command("save")
                 self.disable_rle(edit)
                 return
@@ -368,7 +372,11 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         """
 
         if self.view.is_dirty():
-            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?"):
+            if convert_buffers():
+                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
+            else:
+                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
+            if sublime.ok_cancel_dialog(msg, "Save"):
                 self.view.run_command("save")
             else:
                 # Convert the unsaved buffer
