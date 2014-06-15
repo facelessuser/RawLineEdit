@@ -1,4 +1,7 @@
 {
+    // Use subnotify if available
+    "use_sub_notify": true,
+
     // Use a glyph for a visual representation
     // for newlines
     "use_newline_glyph": true,

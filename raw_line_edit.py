@@ -9,8 +9,14 @@ from __future__ import unicode_literals
 import sublime
 import sublime_plugin
 import codecs
-
 import re
+try:
+    from SubNotify.sub_notify import SubNotifyIsReadyCommand as Notify
+except:
+    class Notify:
+        @classmethod
+        def is_ready(cls):
+            return False
 
 new_line = "¬"
 
@@ -103,6 +109,22 @@ def get_encoding(view):
         encoding = encoding.replace(item[0], item[1])
 
     return "utf_8" if encoding in ["Undefined", "Hexidecimal"] else encoding
+
+
+def notify(msg):
+    settings = sublime.load_settings("raw_line_edit.sublime-settings")
+    if settings.get("use_sub_notify", False) and Notify.is_ready():
+        sublime.run_command("sub_notify", {"title": "RawLineEdit", "msg": msg})
+    else:
+        sublime.status_message(msg)
+
+
+def error(msg):
+    settings = sublime.load_settings("raw_line_edit.sublime-settings")
+    if settings.get("use_sub_notify", False) and Notify.is_ready():
+        sublime.run_command("sub_notify", {"title": "RawLineEdit", "msg": msg, "level": "error"})
+    else:
+        sublime.error_message("RawLineEdit:\n%s" % msg)
 
 
 class RawLineTextBuffer(object):
@@ -220,29 +242,28 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         Enable raw line ending mode
         """
 
-        if self.view.is_dirty(): 
+        if self.view.is_dirty():
             if convert_buffers():
-                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
+                msg = "File has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
             else:
-                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
+                msg = "File has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
             if sublime.ok_cancel_dialog(msg, "Save"):
                 # Save the file
                 self.view.run_command("save")
             else:
                 # Convert the unsaved buffer
                 if convert_buffers():
-                    sublime.status_message("Converting sublime view buffer... ")
                     self.enable_buffer_rle(edit, file_name)
                     return
                 else:
                     if file_name is None:
-                        sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
+                        error("File must exist on disk!")
                         return
                     else:
-                        sublime.status_message("Discarding changes and reading from disk...")
+                        notify("Changes discarded.")
 
         if file_name is None:
-            sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
+            error("File must exist on disk!")
             return
 
         # Convert the file on disk to a raw line view
@@ -381,18 +402,17 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
             else:
                 # Convert the unsaved buffer
                 if convert_buffers():
-                    sublime.status_message("Converting sublime view buffer... ")
                     self.enable_buffer_rle(file_name)
                     return
                 else:
                     if file_name is None:
-                        sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
+                        error("File must exist on disk!")
                         return
                     else:
-                        sublime.status_message("Discarding changes and reading from disk...")
+                        notify("Changes discarded.")
 
         if file_name is None:
-            sublime.error_message("Raw Line Edit:\nFile must exist on disk!")
+            error("File must exist on disk!")
             return
 
         encoding = get_encoding(self.view)
