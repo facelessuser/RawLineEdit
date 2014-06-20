@@ -4,6 +4,12 @@ RawLineEdit
 
 View and edit line endings in Sublime Text.  RawLineEdit displays line endings very clearly and allows changing the line endings per line (something sublime text doesn't allow out of the box).
 
+# Sublime Text 3 Support?
+ST3 support is found here: https://github.com/facelessuser/RawLineEdit/tree/ST3.  All current development is being done on ST3.
+
+# Sublime Text 2 Support?
+ST2 will not be supported
+
 # Usage
 Toggle current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle` (you can setup your own keybinding or add it to your context menu if you choose).   File must exist on disk.
 
@@ -12,6 +18,9 @@ Using `Enter` key you can change Windows style line endings to Unix or use `Shif
 # Settings
 
 ```javascript
+    // Use subnotify if available
+    "use_sub_notify": true,
+
     // Use a glyph for a visual representation
     // for newlines
     "use_newline_glyph": true,
@@ -20,7 +29,19 @@ Using `Enter` key you can change Windows style line endings to Unix or use `Shif
     // a view that highlights only new lines
     // and carriage returns for easy visualization.
     // (Colors customizable via your color scheme file)
-    "use_raw_line_edit_theme": true
+    "use_raw_line_edit_theme": true,
+
+    // View only mode: pops up a output panel showing line endings.
+    // No editing possible.
+    "view_only": false,
+
+    // Operate on sublime unsaved view buffer
+    // Instead of reading the file from disk,
+    // The file will be read directly from the buffer
+    // In these cases the line endings will be normalized,
+    // but you can edit them and save them back to disk.
+    // Not sure how useful this is.
+    "operate_on_unsaved_buffers": false
 ```
 
 # Colorize Line Endings
