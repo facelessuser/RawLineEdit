@@ -10,6 +10,7 @@ import sublime
 import sublime_plugin
 import codecs
 import re
+from os.path import exists
 try:
     from SubNotify.sub_notify import SubNotifyIsReadyCommand as Notify
 except:
@@ -262,8 +263,11 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
                     else:
                         notify("Changes discarded.")
 
-        if file_name is None:
-            error("File must exist on disk!")
+        if file_name is None or not exists(file_name):
+            if convert_buffers():
+                self.enable_buffer_rle(edit)
+            else:
+                error("File must exist on disk!")
             return
 
         # Convert the file on disk to a raw line view
@@ -316,6 +320,8 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         Enable the raw line mode on an unsaved buffer
         """
 
+        if self.view.is_read_only():
+            self.view.set_read_only(False)
         use_glyph = use_newline_glyph()
         if use_glyph:
             self.view.replace(edit, sublime.Region(0, self.view.size()), add_newline_glyph(self.read_buffer()))
@@ -378,7 +384,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         file_name = self.view.file_name()
         settings = self.view.settings()
 
-        if file_name is None and settings.get("RawLineEdit", False):
+        if (file_name is None or not exists(file_name)) and settings.get("RawLineEdit", False):
             self.disable_buffer_rle(edit)
         elif settings.get("RawLineEdit", False):
             self.disable_rle(edit)
@@ -411,8 +417,11 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                     else:
                         notify("Changes discarded.")
 
-        if file_name is None:
-            error("File must exist on disk!")
+        if file_name is None or not exists(file_name):
+            if convert_buffers():
+                self.enable_buffer_rle()
+            else:
+                error("File must exist on disk!")
             return
 
         encoding = get_encoding(self.view)
