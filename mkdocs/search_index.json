@@ -1,0 +1,64 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "RawLineEdit\n\n\nView and edit raw lines in Sublime Text.\n\n\n\n\nOverview\n\n\n\n\nView and edit line endings in Sublime Text.  RawLineEdit displays line endings very clearly and allows changing the line endings per line (something sublime text doesn\nt allow out of the box).\n\n\nSublime Text 3 Support?\n\n\nST3 support is found here: \nhttps://github.com/facelessuser/RawLineEdit/tree/ST3\n.  All current development is being done on ST3.\n\n\nSublime Text 2 Support?\n\n\nST2 will not be supported", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#rawlineedit", 
+            "text": "View and edit raw lines in Sublime Text.", 
+            "title": "RawLineEdit"
+        }, 
+        {
+            "location": "/#overview", 
+            "text": "View and edit line endings in Sublime Text.  RawLineEdit displays line endings very clearly and allows changing the line endings per line (something sublime text doesn t allow out of the box).", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/#sublime-text-3-support", 
+            "text": "ST3 support is found here:  https://github.com/facelessuser/RawLineEdit/tree/ST3 .  All current development is being done on ST3.", 
+            "title": "Sublime Text 3 Support?"
+        }, 
+        {
+            "location": "/#sublime-text-2-support", 
+            "text": "ST2 will not be supported", 
+            "title": "Sublime Text 2 Support?"
+        }, 
+        {
+            "location": "/usage/", 
+            "text": "User Guide\n\n\nConfiguration and usage of RawLineEdit.\n\n\n\n\nGeneral Usage\n\n\nToggle current view to a \nRawLineEdit\n view via the command palette command \nRaw Line Edit: Toggle\n (you can setup your own keybinding or add it to your context menu if you choose).   File must exist on disk.\n\n\nUsing \nEnter\n key you can change Windows style line endings to Unix or use \nShift+Enter\n to do the opposite.  Select multiple lines to change more than one line.\n\n\nSettings\n\n\n    \n// Use subnotify if available\n\n    \nuse_sub_notify\n:\n \ntrue\n,\n\n\n    \n// Use a glyph for a visual representation\n\n    \n// for newlines\n\n    \nuse_newline_glyph\n:\n \ntrue\n,\n\n\n    \n// Use the raw line edit theme to allow\n\n    \n// a view that highlights only new lines\n\n    \n// and carriage returns for easy visualization.\n\n    \n// (Colors customizable via your color scheme file)\n\n    \nuse_raw_line_edit_theme\n:\n \ntrue\n,\n\n\n    \n// View only mode: pops up a output panel showing line endings.\n\n    \n// No editing possible.\n\n    \nview_only\n:\n \nfalse\n,\n\n\n    \n// Operate on sublime unsaved view buffer\n\n    \n// Instead of reading the file from disk,\n\n    \n// The file will be read directly from the buffer\n\n    \n// In these cases the line endings will be normalized,\n\n    \n// but you can edit them and save them back to disk.\n\n    \n// Not sure how useful this is.\n\n    \noperate_on_unsaved_buffers\n:\n \nfalse\n\n\n\n\n\n\nColorize Line Endings\n\n\n        \ndict\n\n            \nkey\nname\n/key\n\n            \nstring\nRaw New Line: Carriage Return\n/string\n\n            \nkey\nscope\n/key\n\n            \nstring\nglyph.carriage-return\n/string\n\n            \nkey\nsettings\n/key\n\n            \ndict\n\n                \nkey\nforeground\n/key\n\n                \nstring\n#66CCCC\n/string\n\n            \n/dict\n\n        \n/dict\n\n        \ndict\n\n            \nkey\nname\n/key\n\n            \nstring\nRaw New Line: New Line Glyph\n/string\n\n            \nkey\nscope\n/key\n\n            \nstring\nglyph.new-line\n/string\n\n            \nkey\nsettings\n/key\n\n            \ndict\n\n                \nkey\nforeground\n/key\n\n                \nstring\n#F2777A\n/string\n\n            \n/dict\n\n        \n/dict", 
+            "title": "User Guide"
+        }, 
+        {
+            "location": "/usage/#user-guide", 
+            "text": "Configuration and usage of RawLineEdit.", 
+            "title": "User Guide"
+        }, 
+        {
+            "location": "/usage/#general-usage", 
+            "text": "Toggle current view to a  RawLineEdit  view via the command palette command  Raw Line Edit: Toggle  (you can setup your own keybinding or add it to your context menu if you choose).   File must exist on disk.  Using  Enter  key you can change Windows style line endings to Unix or use  Shift+Enter  to do the opposite.  Select multiple lines to change more than one line.", 
+            "title": "General Usage"
+        }, 
+        {
+            "location": "/usage/#settings", 
+            "text": "// Use subnotify if available \n     use_sub_notify :   true , \n\n     // Use a glyph for a visual representation \n     // for newlines \n     use_newline_glyph :   true , \n\n     // Use the raw line edit theme to allow \n     // a view that highlights only new lines \n     // and carriage returns for easy visualization. \n     // (Colors customizable via your color scheme file) \n     use_raw_line_edit_theme :   true , \n\n     // View only mode: pops up a output panel showing line endings. \n     // No editing possible. \n     view_only :   false , \n\n     // Operate on sublime unsaved view buffer \n     // Instead of reading the file from disk, \n     // The file will be read directly from the buffer \n     // In these cases the line endings will be normalized, \n     // but you can edit them and save them back to disk. \n     // Not sure how useful this is. \n     operate_on_unsaved_buffers :   false", 
+            "title": "Settings"
+        }, 
+        {
+            "location": "/usage/#colorize-line-endings", 
+            "text": "dict \n             key name /key \n             string Raw New Line: Carriage Return /string \n             key scope /key \n             string glyph.carriage-return /string \n             key settings /key \n             dict \n                 key foreground /key \n                 string #66CCCC /string \n             /dict \n         /dict \n         dict \n             key name /key \n             string Raw New Line: New Line Glyph /string \n             key scope /key \n             string glyph.new-line /string \n             key settings /key \n             dict \n                 key foreground /key \n                 string #F2777A /string \n             /dict \n         /dict", 
+            "title": "Colorize Line Endings"
+        }, 
+        {
+            "location": "/license/", 
+            "text": "License\n\n\n\n\nRaw Line Edit is released under the MIT license.\n\n\nCopyright \n 2013 - 2015 Isaac Muse \n\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \nSoftware\n), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n\nTHE SOFTWARE IS PROVIDED \nAS IS\n, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.", 
+            "title": "License"
+        }, 
+        {
+            "location": "/license/#license", 
+            "text": "Raw Line Edit is released under the MIT license.  Copyright   2013 - 2015 Isaac Muse   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the  Software ), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED  AS IS , WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.", 
+            "title": "License"
+        }
+    ]
+}
