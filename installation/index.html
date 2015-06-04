@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>License - RawLineEdit Documentation</title>
+  <title>Installation - RawLineEdit Documentation</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -51,8 +51,19 @@
 <li>
           
             <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../installation/">Installation</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Installation</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#installation">Installation</a></li>
+                
+                    <li><a class="toctree-l4" href="#package-control">Package Control</a></li>
+                
+                    <li><a class="toctree-l4" href="#git-cloning">Git Cloning</a></li>
+                
+            
+            </ul>
         
     </li>
 <li>
@@ -72,15 +83,8 @@
 <li>
           
             <li>
-    <li class="toctree-l1 current">
-        <a class="current" href="./">License</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#license">License</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../license/">License</a>
         
     </li>
 <li>
@@ -107,7 +111,7 @@
     
       
     
-    <li>License</li>
+    <li>Installation</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -121,13 +125,48 @@
           <div role="main">
             <div class="section">
               
-                <h1 class="doctitle" id="license"><a name="user-content-license" href="#license" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>License</h1>
+                <h1 class="doctitle" id="installation"><a name="user-content-installation" href="#installation" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Installation</h1>
+<p>Installing QuickCal.</p>
 <hr />
-<p>Raw Line Edit is released under the MIT license.</p>
-<p>Copyright &copy; 2013 - 2015 Isaac Muse <a href="../&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#105;&#115;&#97;&#97;&#99;&#109;&#117;&#115;&#101;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#105;&#115;&#97;&#97;&#99;&#109;&#117;&#115;&#101;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a></p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &ldquo;Software&rdquo;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED &ldquo;AS IS&rdquo;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<h2 id="package-control"><a name="user-content-package-control" href="#package-control" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Package Control</h2>
+<p>The recommended way to install QuickCal is via <a href="https://packagecontrol.io/">Package Control</a>.  Package Control will install the correct branch on your system and keep it up to date.</p>
+<ol>
+<li>
+<p>Ensure Package Control is installed.  Instructions are found <a href="https://packagecontrol.io/installation">here</a>.</p>
+</li>
+<li>
+<p>In sublime, press <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> (Win, Linux) or <kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> (OSX) to bring up the quick panel.  It will show a list of installable plugins.</p>
+</li>
+<li>
+<p>Start typing <code>QuickCal</code>, when you see it, select it.</p>
+</li>
+<li>
+<p>Restart to be sure everything is loaded proper.</p>
+</li>
+<li>
+<p>Enjoy!</p>
+</li>
+</ol>
+<h2 id="git-cloning"><a name="user-content-git-cloning" href="#git-cloning" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Git Cloning</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is not the recommended way to install QuickCal for the casual user as it requires the user to know which branch to install, know how to use git, and <strong>will not</strong> get automatically updated.</p>
+<p>If you are forking for a pull request, this is the way to go, just replace the official repository with the link for your fork.</p>
+</div>
+<ol>
+<li>
+<p>Quit Sublime Text.</p>
+</li>
+<li>
+<p>Open a terminal:</p>
+<div class="codehilite"><pre>cd /path/to/Sublime Text 3/Packages
+git clone https://github.com/facelessuser/QuickCal.git QuickCal
+</pre></div>
+
+
+</li>
+</ol>
+<p>3 Restart Sublime Text.</p>
               
             </div>
           </div>
@@ -135,8 +174,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../usage/" class="btn btn-neutral float-right" title="User Guide"/>Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../contributing/" class="btn btn-neutral" title="Contributing &amp; Support"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href=".." class="btn btn-neutral" title="About RawLineEdit"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -167,8 +208,10 @@
           <a class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../contributing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../usage/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
