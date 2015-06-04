@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-
 """
-Raw Line Edit
+Raw Line Edit.
+
 Licensed under MIT
-Copyright (c) 2013 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2013 - 2015 Isaac Muse <isaacmuse@gmail.com>
 """
 from __future__ import unicode_literals
 import sublime
@@ -13,86 +13,73 @@ import re
 from os.path import exists
 try:
     from SubNotify.sub_notify import SubNotifyIsReadyCommand as Notify
-except:
+except Exception:
     class Notify:
+
+        """Fallback notify class."""
+
         @classmethod
         def is_ready(cls):
+            """Disable SubNotify by returning False."""
+
             return False
 
 new_line = "¬"
 
 
 def strip_newline_glyph(text):
-    """
-    Remove visible newline glyph
-    """
+    """Remove visible newline glyph."""
 
     return re.sub(r"%s\n" % new_line, "\n", text)
 
 
 def add_newline_glyph(text):
-    """
-    Add new visible newline glyph
-    """
+    """Add new visible newline glyph."""
 
     return re.sub(r"\n", "%s\n" % new_line, text)
 
 
 def strip_carriage_returns(text, glyph):
-    """
-    Strip visible carriage returns
-    """
+    """Strip visible carriage returns."""
 
     new_line_glyph = new_line if glyph else ""
     return re.sub(r"\r*%s\n" % new_line_glyph, "%s\n" % new_line_glyph, text)
 
 
 def add_carriage_returns(text, glyph):
-    """
-    Add visible carriage returns
-    """
+    """Add visible carriage returns."""
 
     new_line_glyph = new_line if glyph else ""
     return re.sub(r"(?<!\r)%s\n" % new_line_glyph, "\r%s\n" % new_line_glyph, text)
 
 
 def strip_buffer_glyphs(text, glyph):
-    """
-    Strip all glyphs from buffer to load back into view.
-    """
+    """Strip all glyphs from buffer to load back into view."""
 
     new_line_glyph = new_line if glyph else ""
     return re.sub(r"\r*%s?\n|\r" % new_line_glyph, "\n", text)
 
 
 def use_newline_glyph():
-    """
-    Use the newline glyph
-    """
+    """Use the newline glyph."""
 
     return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_newline_glyph", False))
 
 
 def use_theme():
-    """
-    Use the raw line theme to highlight line endings
-    """
+    """Use the raw line theme to highlight line endings."""
 
     return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_raw_line_edit_theme", False))
 
 
 def convert_buffers():
-    """
-    Operate on unsaved buffers
-    """
+    """Operate on unsaved buffers."""
 
     return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("operate_on_unsaved_buffers", False))
 
 
 def get_encoding(view):
-    """
-    Get the file encoding
-    """
+    """Get the file encoding."""
 
     encoding = view.encoding()
     mapping = [
@@ -113,6 +100,8 @@ def get_encoding(view):
 
 
 def notify(msg):
+    """Notify message."""
+
     settings = sublime.load_settings("raw_line_edit.sublime-settings")
     if settings.get("use_sub_notify", False) and Notify.is_ready():
         sublime.run_command("sub_notify", {"title": "RawLineEdit", "msg": msg})
@@ -121,6 +110,8 @@ def notify(msg):
 
 
 def error(msg):
+    """Error message."""
+
     settings = sublime.load_settings("raw_line_edit.sublime-settings")
     if settings.get("use_sub_notify", False) and Notify.is_ready():
         sublime.run_command("sub_notify", {"title": "RawLineEdit", "msg": msg, "level": "error"})
@@ -129,6 +120,9 @@ def error(msg):
 
 
 class RawLineTextBuffer(object):
+
+    """Text buffer."""
+
     bfr = None
     syntax = None
     endings = None
@@ -136,9 +130,7 @@ class RawLineTextBuffer(object):
 
     @classmethod
     def set_buffer(cls, view, use_glyph):
-        """
-        Read buffer from view and strip new line glyphs
-        """
+        """Read buffer from view and strip new line glyphs."""
 
         cls.bfr = strip_buffer_glyphs(
             view.substr(sublime.Region(0, view.size())),
@@ -147,27 +139,21 @@ class RawLineTextBuffer(object):
 
     @classmethod
     def clear_buffer(cls):
-        """
-        Clear the buffer object
-        """
+        """Clear the buffer object."""
 
         cls.bfr = None
         cls.view = None
 
     @classmethod
     def check_loading(cls, view):
-        """
-        Check if file is done loading yet before applying buffer
-        """
+        """Check if file is done loading yet before applying buffer."""
 
         cls.view = view
         sublime.set_timeout(cls.poll_loading, 300)
 
     @classmethod
     def poll_loading(cls):
-        """
-        Check if file is done loading, and if so, update view with buffer
-        """
+        """Check if file is done loading, and if so, update view with buffer."""
 
         if cls.view.is_loading():
             sublime.set_timeout(cls.poll_loading, 300)
@@ -176,10 +162,11 @@ class RawLineTextBuffer(object):
 
 
 class WriteRawLineTextCommand(sublime_plugin.TextCommand):
+
+    """Write buffer to view."""
+
     def run(self, edit):
-        """
-        Write the unsaved buffer to the view.
-        """
+        """Write the unsaved buffer to the view."""
 
         if RawLineTextBuffer.bfr is None:
             return
@@ -188,10 +175,11 @@ class WriteRawLineTextCommand(sublime_plugin.TextCommand):
 
 
 class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
+
+    """Toggle raw line edit mode."""
+
     def disable_rle(self, edit):
-        """
-        Disable raw line ending mode
-        """
+        """Disable raw line ending mode."""
 
         # Save raw line ending changes
         if self.view.is_dirty():
@@ -239,15 +227,19 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             RawLineTextBuffer.check_loading(new_view)
 
     def enable_rle(self, edit, file_name):
-        """
-        Enable raw line ending mode
-        """
+        """Enable raw line ending mode."""
 
         if self.view.is_dirty():
             if convert_buffers():
-                msg = "File has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
+                msg = (
+                    "File has unsaved changes.  If you choose not to save, "
+                    "the view buffer will be parsed as the source.\n\nSave?"
+                )
             else:
-                msg = "File has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
+                msg = (
+                    "File has unsaved changes.  If you choose not to save, "
+                    "changes will be discared and the file will be parsed from disk.\n\nSave?"
+                )
             if sublime.ok_cancel_dialog(msg, "Save"):
                 # Save the file
                 self.view.run_command("save")
@@ -274,12 +266,13 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         encoding = get_encoding(self.view)
         try:
             self.show_rle(edit, file_name, encoding)
-        except:
+        except Exception:
             self.show_rle(edit, file_name, "utf-8")
 
     def show_rle(self, edit, file_name, encoding):
         """
         Read the file from disk converting actual lines to glyphs.
+
         Present the info in raw line view.
         """
         with codecs.open(file_name, "r", encoding) as f:
@@ -300,9 +293,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             self.view.set_read_only(True)
 
     def read_buffer(self):
-        """
-        Read the unsaved buffer and replace with new line glyphs
-        """
+        """Read the unsaved buffer and replace with new line glyphs."""
 
         endings = {
             "Windows": "\r\n",
@@ -316,9 +307,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         return "".join(bfr)
 
     def enable_buffer_rle(self, edit, file_name=None):
-        """
-        Enable the raw line mode on an unsaved buffer
-        """
+        """Enable the raw line mode on an unsaved buffer."""
 
         if self.view.is_read_only():
             self.view.set_read_only(False)
@@ -341,9 +330,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         self.view.set_read_only(True)
 
     def disable_buffer_rle(self, edit):
-        """
-        Disable the raw line mode on an unsaved buffer
-        """
+        """Disable the raw line mode on an unsaved buffer."""
 
         if self.view.is_dirty():
             if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?", "Save"):
@@ -368,18 +355,14 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         win.focus_view(new_view)
 
     def is_enabled(self):
-        """
-        Check if enabled
-        """
+        """Check if enabled."""
 
         p_settings = sublime.load_settings("raw_line_edit.sublime-settings")
         v_settings = self.view.settings()
         return not bool(p_settings.get("view_only", False)) or v_settings.get("RawLineEdit", False)
 
     def run(self, edit):
-        """
-        Toggle the raw line mode
-        """
+        """Toggle the raw line mode."""
 
         file_name = self.view.file_name()
         settings = self.view.settings()
@@ -393,16 +376,23 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
 
 
 class PopupRawLineEditCommand(sublime_plugin.TextCommand):
+
+    """Popup command."""
+
     def popup_rle(self, file_name):
-        """
-        Popup raw line edit view
-        """
+        """Popup raw line edit view."""
 
         if self.view.is_dirty():
             if convert_buffers():
-                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, the view buffer will be parsed as the source.\n\nSave?"
+                msg = (
+                    "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, "
+                    "the view buffer will be parsed as the source.\n\nSave?"
+                )
             else:
-                msg = "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, changes will be discared and the file will be parsed from disk.\n\nSave?"
+                msg = (
+                    "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, "
+                    "changes will be discared and the file will be parsed from disk.\n\nSave?"
+                )
             if sublime.ok_cancel_dialog(msg, "Save"):
                 self.view.run_command("save")
             else:
@@ -427,13 +417,11 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         encoding = get_encoding(self.view)
         try:
             self.show_rle(file_name, encoding)
-        except:
+        except Exception:
             self.show_rle(file_name, "utf-8")
 
     def read_buffer(self):
-        """
-        Read the unsaved buffer and replace with new line glyphs
-        """
+        """Read the unsaved buffer and replace with new line glyphs."""
 
         endings = {
             "Windows": "\r\n",
@@ -447,9 +435,7 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         return "".join(bfr)
 
     def enable_buffer_rle(self, file_name=None):
-        """
-        Enable the raw line mode on an unsaved buffer
-        """
+        """Enable the raw line mode on an unsaved buffer."""
 
         view = self.view.window().get_output_panel('raw_line_edit_view')
         view.set_line_endings("Unix")
@@ -477,9 +463,7 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
 
     def show_rle(self, file_name, encoding):
-        """
-        Show the raw line view popup
-        """
+        """Show the raw line view popup."""
 
         try:
             view = self.view.window().get_output_panel('raw_line_edit_view')
@@ -494,7 +478,11 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                     RawLinesEditReplaceCommand.text = f.read()
                 view.run_command("raw_lines_edit_replace")
                 view.sel().clear()
-                view.set_syntax_file(self.view.settings().get('syntax') if not use_theme() else "Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
+                if not use_theme():
+                    syntax_file = self.view.settings().get('syntax')
+                else:
+                    syntax_file = "Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage"
+                view.set_syntax_file(syntax_file)
                 view.settings().set("RawLineEditSyntax", self.view.settings().get('syntax'))
                 view.settings().set("RawLineEditGlyph", use_glyph)
                 view.settings().set("RawLineEdit", True)
@@ -503,21 +491,17 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                 view.set_scratch(True)
                 view.set_read_only(True)
                 self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
-        except:
+        except Exception:
             self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
             raise
 
     def is_enabled(self):
-        """
-        Is enabled
-        """
+        """Check if command is enabled."""
 
         return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("view_only", False))
 
     def run(self, edit):
-        """
-        Popup panel with raw line view
-        """
+        """Popup panel with raw line view."""
 
         file_name = self.view.file_name()
         settings = self.view.settings()
@@ -526,10 +510,11 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
 
 
 class RawLineInsertCommand(sublime_plugin.TextCommand):
+
+    """Insert text in view."""
+
     def run(self, edit, style="Unix"):
-        """
-        Insert text
-        """
+        """Insert text."""
 
         self.view.set_scratch(False)
         self.view.set_read_only(False)
@@ -544,13 +529,14 @@ class RawLineInsertCommand(sublime_plugin.TextCommand):
 
 
 class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
+
+    """Replace text in view."""
+
     text = None
     region = None
 
     def run(self, edit):
-        """
-        Replace text
-        """
+        """Replace text."""
 
         cls = RawLinesEditReplaceCommand
         if cls.text is not None and cls.region is not None:
@@ -560,10 +546,11 @@ class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
 
 
 class RawLineEditListener(sublime_plugin.EventListener):
+
+    """RawLineEdit Listener."""
+
     def on_pre_save(self, view):
-        """
-        Convert raw line mode back to normal mode before save
-        """
+        """Convert raw line mode back to normal mode before save."""
 
         if view.settings().get("RawLineEdit", False) and not view.settings().get('RawLineEditPopup', False):
             use_glyph = view.settings().get("RawLineEditGlyph")
@@ -577,9 +564,7 @@ class RawLineEditListener(sublime_plugin.EventListener):
             view.set_read_only(True)
 
     def on_post_save(self, view):
-        """
-        Convert view back to raw line mode after save
-        """
+        """Convert view back to raw line mode after save."""
 
         if view.settings().get("RawLineEdit", False) and not view.settings().get('RawLineEditPopup', False):
             file_name = view.file_name()
@@ -600,9 +585,7 @@ class RawLineEditListener(sublime_plugin.EventListener):
             view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
 
     def on_query_context(self, view, key, operator, operand, match_all):
-        """
-        Handle raw line mode shortcuts
-        """
+        """Handle raw line mode shortcuts."""
 
         settings = view.settings()
         return (

@@ -4,12 +4,12 @@ Configuration and usage of RawLineEdit.
 
 ---
 
-# General Usage
+## General Usage
 Toggle current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle` (you can setup your own keybinding or add it to your context menu if you choose).   File must exist on disk.
 
 Using `Enter` key you can change Windows style line endings to Unix or use `Shift+Enter` to do the opposite.  Select multiple lines to change more than one line.
 
-# Settings
+## Settings
 
 ```javascript
     // Use subnotify if available
@@ -38,7 +38,7 @@ Using `Enter` key you can change Windows style line endings to Unix or use `Shif
     "operate_on_unsaved_buffers": false
 ```
 
-# Colorize Line Endings
+## Colorize Line Endings
 
 ```xml
         <dict>
