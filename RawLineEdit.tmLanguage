@@ -6,6 +6,8 @@
 	<array>
 		<string>Raw Line Edits</string>
 	</array>
+	<key>hidden</key>
+	<true/>
 	<key>keyEquivalent</key>
 	<string>~^R</string>
 	<key>name</key>

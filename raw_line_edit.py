@@ -24,6 +24,9 @@ except Exception:
 
             return False
 
+USE_ST_SYNTAX = int(sublime.version()) >= 3092
+ST_SYNTAX = "sublime-syntax" if USE_ST_SYNTAX else 'tmLanguage'
+
 new_line = "¬"
 
 
@@ -288,7 +291,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             settings.set("RawLineEditSyntax", settings.get('syntax'))
             settings.set("RawLineEditFilename", file_name)
             if use_theme():
-                self.view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
+                self.view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.%s" % ST_SYNTAX)
             self.view.set_scratch(True)
             self.view.set_read_only(True)
 
