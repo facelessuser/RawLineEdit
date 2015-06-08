@@ -1,6 +1,5 @@
 # RawLineEdit {: .doctitle}
 View and edit raw lines in Sublime Text.
-{: .doctitle-info}
 
 ---
 
@@ -13,4 +12,4 @@ View and edit line endings in Sublime Text.  RawLineEdit displays line endings v
 ST3 support is found here: https://github.com/facelessuser/RawLineEdit/tree/ST3.  All current development is being done on ST3.
 
 ## Sublime Text 2 Support?
-ST2 will not be supported
+ST2 will not be supported.
