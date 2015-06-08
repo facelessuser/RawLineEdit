@@ -6,7 +6,7 @@ Configuration and usage of RawLineEdit.
 ## General Usage
 Toggle the current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle` (you can setup your own keybinding or add it to your context menu if you choose).
 
-Using the `Enter` key you can change Windows style line endings to Unix or use `Shift+Enter` to do the opposite.  Select multiple lines to change more than one line.
+Using the <kbd>Enter</kbd> key you can change Windows style line endings to Unix or use <kbd>Shift</kbd> + <kbd>Enter</kbd> to do the opposite.  Select multiple lines to change more than one line.
 
 ## Settings
 RawLineEdit has a few settings that can tweak the behavior and look of the plugin.
