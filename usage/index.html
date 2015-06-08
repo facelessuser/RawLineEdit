@@ -128,30 +128,42 @@
             <div class="section">
               
                 <h1 class="doctitle" id="user-guide"><a name="user-content-user-guide" href="#user-guide" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>User Guide</h1>
-<p class="doctitle-info">Configuration and usage of RawLineEdit.<br /></p>
+<p>Configuration and usage of RawLineEdit.</p>
 <hr />
 <h2 id="general-usage"><a name="user-content-general-usage" href="#general-usage" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>General Usage</h2>
-<p>Toggle current view to a &ldquo;RawLineEdit&rdquo; view via the command palette command <code>Raw Line Edit: Toggle</code> (you can setup your own keybinding or add it to your context menu if you choose).   File must exist on disk.</p>
-<p>Using <code>Enter</code> key you can change Windows style line endings to Unix or use <code>Shift+Enter</code> to do the opposite.  Select multiple lines to change more than one line.</p>
+<p>Toggle the current view to a &ldquo;RawLineEdit&rdquo; view via the command palette command <code>Raw Line Edit: Toggle</code> (you can setup your own keybinding or add it to your context menu if you choose).</p>
+<p>Using the <code>Enter</code> key you can change Windows style line endings to Unix or use <code>Shift+Enter</code> to do the opposite.  Select multiple lines to change more than one line.</p>
 <h2 id="settings"><a name="user-content-settings" href="#settings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Settings</h2>
-<div class="codehilite"><pre>    <span class="c1">// Use subnotify if available</span>
-    <span class="s2">&quot;use_sub_notify&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-
-    <span class="c1">// Use a glyph for a visual representation</span>
+<p>RawLineEdit has a few settings that can tweak the behavior and look of the plugin.</p>
+<h3 id="use_newline_glyph"><a name="user-content-use_newline_glyph" href="#use_newline_glyph" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>use_newline_glyph</h3>
+<p>Sublime Text 3 will show a special glyph for carriage returns, but they show nothing for normal new lines.  This setting will enable showing a <code>¬</code> character for newlines.</p>
+<div class="codehilite"><pre>    <span class="c1">// Use a glyph for a visual representation</span>
     <span class="c1">// for newlines</span>
     <span class="s2">&quot;use_newline_glyph&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</pre></div>
 
-    <span class="c1">// Use the raw line edit theme to allow</span>
+
+<h3 id="use_raw_line_edit_theme"><a name="user-content-use_raw_line_edit_theme" href="#use_raw_line_edit_theme" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>use_raw_line_edit_theme</h3>
+<p>Uses a special language file so that a theme can colorize the line endings.  See <a href="#colorize-line-endings">Colorize Line Endings</a> for more info.</p>
+<div class="codehilite"><pre>    <span class="c1">// Use the raw line edit theme to allow</span>
     <span class="c1">// a view that highlights only new lines</span>
     <span class="c1">// and carriage returns for easy visualization.</span>
     <span class="c1">// (Colors customizable via your color scheme file)</span>
     <span class="s2">&quot;use_raw_line_edit_theme&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</pre></div>
 
-    <span class="c1">// View only mode: pops up a output panel showing line endings.</span>
+
+<h3 id="view_only"><a name="user-content-view_only" href="#view_only" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>view_only</h3>
+<p>Instead of opening a read/write view, RawLineEdit will open up a read only output panel.</p>
+<div class="codehilite"><pre>    <span class="c1">// View only mode: pops up an output panel showing line endings.</span>
     <span class="c1">// No editing possible.</span>
     <span class="s2">&quot;view_only&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+</pre></div>
 
-    <span class="c1">// Operate on sublime unsaved view buffer</span>
+
+<h3 id="operate_on_unsaved_buffers"><a name="user-content-operate_on_unsaved_buffers" href="#operate_on_unsaved_buffers" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>operate_on_unsaved_buffers</h3>
+<p>Allows RawLineEdit to operate on views that haven&rsquo;t been saved to disk.</p>
+<div class="codehilite"><pre>    <span class="c1">// Operate on sublime unsaved view buffer</span>
     <span class="c1">// Instead of reading the file from disk,</span>
     <span class="c1">// The file will be read directly from the buffer</span>
     <span class="c1">// In these cases the line endings will be normalized,</span>
@@ -161,7 +173,16 @@
 </pre></div>
 
 
+<h3 id="use_sub_notify"><a name="user-content-use_sub_notify" href="#use_sub_notify" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>use_sub_notify</h3>
+<p>Enables sending messages through the <a href="https://github.com/facelessuser/SubNotify">SubNotify</a> plugin.</p>
+<div class="codehilite"><pre>    <span class="c1">// Use subnotify if available</span>
+    <span class="s2">&quot;use_sub_notify&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+</pre></div>
+
+
 <h2 id="colorize-line-endings"><a name="user-content-colorize-line-endings" href="#colorize-line-endings" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Colorize Line Endings</h2>
+<p>When the <a href="#use_raw_line_edit_theme">use_raw_line_edit_theme</a> is enabled, RawLineEdit will use a special language file so that a theme can colorize the line endings.  In order to get the special colors, you must add special keys to your current tmTheme file.</p>
+<p>Here are the keys; you can specify whatever color you like:</p>
 <div class="codehilite"><pre>        <span class="nt">&lt;dict&gt;</span>
             <span class="nt">&lt;key&gt;</span>name<span class="nt">&lt;/key&gt;</span>
             <span class="nt">&lt;string&gt;</span>Raw New Line: Carriage Return<span class="nt">&lt;/string&gt;</span>
