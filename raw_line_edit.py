@@ -123,7 +123,6 @@ def error(msg):
 
 
 class RawLineTextBuffer(object):
-
     """Text buffer."""
 
     bfr = None
@@ -165,7 +164,6 @@ class RawLineTextBuffer(object):
 
 
 class WriteRawLineTextCommand(sublime_plugin.TextCommand):
-
     """Write buffer to view."""
 
     def run(self, edit):
@@ -178,7 +176,6 @@ class WriteRawLineTextCommand(sublime_plugin.TextCommand):
 
 
 class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
-
     """Toggle raw line edit mode."""
 
     def disable_rle(self, edit):
@@ -379,7 +376,6 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
 
 
 class PopupRawLineEditCommand(sublime_plugin.TextCommand):
-
     """Popup command."""
 
     def popup_rle(self, file_name):
@@ -513,7 +509,6 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
 
 
 class RawLineInsertCommand(sublime_plugin.TextCommand):
-
     """Insert text in view."""
 
     def run(self, edit, style="Unix"):
@@ -532,7 +527,6 @@ class RawLineInsertCommand(sublime_plugin.TextCommand):
 
 
 class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
-
     """Replace text in view."""
 
     text = None
@@ -549,7 +543,6 @@ class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
 
 
 class RawLineEditListener(sublime_plugin.EventListener):
-
     """RawLineEdit Listener."""
 
     def on_pre_save(self, view):
