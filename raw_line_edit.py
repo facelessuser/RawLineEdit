@@ -3,7 +3,7 @@
 Raw Line Edit.
 
 Licensed under MIT
-Copyright (c) 2013 - 2015 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2013 - 2016 Isaac Muse <isaacmuse@gmail.com>
 """
 from __future__ import unicode_literals
 import sublime
