@@ -1,28 +1,79 @@
 site_name: RawLineEdit Documentation
+site_url: https://facelessuser.github.io/RawLineEdit
 repo_url: https://github.com/facelessuser/RawLineEdit
+edit_uri: tree/master/docs/src/markdown
 site_description: View and edit raw lines in Sublime Text.
-copyright: Copyright &copy; 2013 - 2015 <a href="https://github.com/facelessuser">Isaac Muse</a>
+copyright: Copyright &copy; 2013 - 2017 <a href="https://github.com/facelessuser">Isaac Muse</a>
+
+theme: readthedocs
+theme_dir: doc_theme
+
 pages:
   - About RawLineEdit: index.md
   - Installation: installation.md
   - User Guide: usage.md
   - Contributing &amp; Support: contributing.md
   - License: license.md
-theme: readthedocs
-theme_dir: doc_theme
+
+theme: material
+docs_dir: docs/src/markdown
+theme_dir: docs/theme
+
 markdown_extensions:
-  - markdown.extensions.admonition
-  - markdown.extensions.smarty
-  - markdown.extensions.nl2br
-  - markdown.extensions.codehilite:
-      guess_lang: false
-  - pymdownx.extra
-  - pymdownx.inlinehilite
-  - pymdownx.magiclink
-  - pymdownx.tilde
-  - pymdownx.caret
-  - pymdownx.smartsymbols
-  - pymdownx.githubemoji
-  - pymdownx.tasklist
-  - pymdownx.progressbar
-  - pymdownx.headeranchor
+  - markdown.extensions.toc:
+      slugify: !!python/name:pymdownx.slugs.uslugify
+      permalink: "\ue157"
+  - markdown.extensions.admonition:
+  - markdown.extensions.smarty:
+      smart_quotes: false
+  - pymdownx.betterem:
+  - markdown.extensions.attr_list:
+  - markdown.extensions.def_list:
+  - markdown.extensions.tables:
+  - markdown.extensions.abbr:
+  - pymdownx.extrarawhtml:
+  - pymdownx.superfences:
+  - pymdownx.highlight:
+      css_class: codehilite
+      extend_pygments_lang:
+        - name: php-inline
+          lang: php
+          options:
+            startinline: true
+  - pymdownx.inlinehilite:
+  - pymdownx.magiclink:
+      repo_url_shortener: true
+      base_repo_url: https://github.com/facelessuser/RawLineEdit
+  - pymdownx.tilde:
+  - pymdownx.caret:
+  - pymdownx.smartsymbols:
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_png
+  - pymdownx.escapeall:
+      hardbreak: true
+      nbsp: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.progressbar:
+  - pymdownx.plainhtml:
+      strip_attributes: ''
+  - pymdownx.snippets:
+      base_path: docs/src/markdown/_snippets
+  - pymdownx.keys:
+      separator: "\uff0b"
+  - pymdownx.details:
+
+extra:
+  palette:
+    primary: blue
+    accent: blue
+  font:
+    text: Roboto
+    code: Roboto Mono
+  social:
+    - type: github
+      link: https://github.com/facelessuser
+extra_css:
+  - extra-9b4c72abee.css
+extra_javascript:
+  - extra-449b50d2b3.js

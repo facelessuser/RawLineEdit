@@ -1,14 +1,12 @@
-# Installation {: .doctitle}
-Installing RawLineEdit.
-
----
+# Installation
 
 ## Package Control
-The recommended way to install RawLineEdit is via [Package Control](https://packagecontrol.io/).  Package Control will install the correct branch on your system and keep it up to date.
 
-1. Ensure Package Control is installed.  Instructions are found [here](https://packagecontrol.io/installation).
+The recommended way to install RawLineEdit is via [Package Control][package-control].  Package Control will install the correct branch on your system and keep it up to date.
 
-2. In Sublime Text, press <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> (Win, Linux) or <kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> (OSX) to bring up the quick panel and start typing `Package Control: Install Package`.  Select the command and it will show a list of installable plugins.
+1. Ensure Package Control is installed.  Instructions are found [here][package-control-install].
+
+2. In Sublime Text, press ++ctrl+shift+p++ (Win, Linux) or ++cmd+shift+p++ (macOS) to bring up the quick panel and start typing `Package Control: Install Package`.  Select the command and it will show a list of installable plugins.
 
 3. Start typing `RawLineEdit`; when you see it, select it.
 
@@ -33,3 +31,5 @@ The recommended way to install RawLineEdit is via [Package Control](https://pack
     ```
 
 3. Restart Sublime Text.
+
+--8<-- "refs.md"
