@@ -1,4 +1,5 @@
 [![Unix Build Status][travis-image]][travis-link]
+[![Package Control Downloads][pc-image]][pc-link]
 ![License][license-image]
 # RawLineEdit
 
@@ -24,4 +25,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 [travis-image]: https://img.shields.io/travis/facelessuser/RawLineEdit/master.svg
 [travis-link]: https://travis-ci.org/facelessuser/RawLineEdit
+[pc-image]: https://img.shields.io/packagecontrol/dt/RawLineEdit.svg
+[pc-link]: https://packagecontrol.io/packages/RawLineEdit
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
