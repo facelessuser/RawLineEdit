@@ -193,7 +193,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         use_glyph = settings.get("RawLineEditGlyph")
         buffer_endings = settings.get("RawLineBuffer", None)
 
-        # Strip the buffer of gyphs and prepare to write
+        # Strip the buffer of glyphs and prepare to write
         # the stripped buffer back to the view
         if buffer_endings is not None:
             RawLineTextBuffer.set_buffer(self.view, use_glyph)

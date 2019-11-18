@@ -109,7 +109,7 @@ class RawLineEditOpenSiteCommand(sublime_plugin.ApplicationCommand):
     """Open site links."""
 
     def run(self, url):
-        """Open the url."""
+        """Open the URL."""
 
         webbrowser.open_new_tab(url)
 
