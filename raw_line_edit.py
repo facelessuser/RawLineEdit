@@ -387,17 +387,18 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         if self.view.is_dirty():
             if convert_buffers():
                 msg = (
-                    "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, "
+                    "File has unsaved changes.  If you choose to 'continue' without a 'save', "
                     "the view buffer will be parsed as the source.\n\nSave?"
                 )
             else:
                 msg = (
-                    "Raw Line Edit:\nFile has unsaved changes.  If you choose not to save, "
-                    "changes will be discared and the file will be parsed from disk.\n\nSave?"
+                    "File has unsaved changes.  If you choose to 'continue' without a 'save', "
+                    "changes will be discarded and the file will be parsed from disk.\n\nSave?"
                 )
-            if sublime.ok_cancel_dialog(msg, "Save"):
+            value = sublime.yes_no_cancel_dialog(msg, "Save", "Discard Changes", "Cancel")
+            if value == sublime.DIALOG_YES:
                 self.view.run_command("save")
-            else:
+            elif value == sublime.DIALOG_NO:
                 # Convert the unsaved buffer
                 if convert_buffers():
                     self.enable_buffer_rle(file_name)
@@ -408,6 +409,8 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                         return
                     else:
                         notify("Changes discarded.")
+            else:
+                return
 
         if file_name is None or not exists(file_name):
             if convert_buffers():

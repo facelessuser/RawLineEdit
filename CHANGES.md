@@ -1,3 +1,8 @@
+# RawLineEdit 1.3.0
+
+- **NEW**: When view is unsaved, allow the ability to save, continue without saving, and canceling when using popup
+  output.
+
 # RawLineEdit 1.2.1
 
 - **FIX**: When view is unsaved, allow the ability to save, continue without saving, and canceling.
