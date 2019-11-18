@@ -24,55 +24,80 @@ except Exception:
 
             return False
 
-USE_ST_SYNTAX = int(sublime.version()) >= 3092
-ST_SYNTAX = "sublime-syntax" if USE_ST_SYNTAX else 'tmLanguage'
+CSS = """
+<style>
+span {
+  display: inline;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.05rem 0.25rem;
+  border-radius: 0.25rem;
+  background-color: var(--foreground);
+  color: var(--background);
+  border: 1px solid var(--mdpopups-kbd-border);
+}
+html.light span {
+  border: 1px solid color(var(--foreground) blend(white 80%));
+}
+html.light span {
+  border: 1px solid color(var(--foreground) blend(black 80%));;
+}
+</style>
+"""
 
-new_line = "¬"
-
-
-def strip_newline_glyph(text):
-    """Remove visible newline glyph."""
-
-    return re.sub(r"%s\n" % new_line, "\n", text)
-
-
-def add_newline_glyph(text):
-    """Add new visible newline glyph."""
-
-    return re.sub(r"\n", "%s\n" % new_line, text)
-
-
-def strip_carriage_returns(text, glyph):
-    """Strip visible carriage returns."""
-
-    new_line_glyph = new_line if glyph else ""
-    return re.sub(r"\r*%s\n" % new_line_glyph, "%s\n" % new_line_glyph, text)
-
-
-def add_carriage_returns(text, glyph):
-    """Add visible carriage returns."""
-
-    new_line_glyph = new_line if glyph else ""
-    return re.sub(r"(?<!\r)%s\n" % new_line_glyph, "\r%s\n" % new_line_glyph, text)
+RE_NEW_LINE = re.compile(r'(?:\r\n|(?!\r\n)[\n\r])')
 
 
-def strip_buffer_glyphs(text, glyph):
+def process_lines(text):
+    """Count line ending types and return buffer with only new lines."""
+
+    crlf = []
+    lf = []
+    cr = []
+    line = {'value': -1}
+
+    def repl(m):
+        """Replace."""
+
+        line['value'] += 1
+        end = m.group(0)
+        if end == '\r\n':
+            crlf.append(line['value'])
+        elif end == '\n':
+            lf.append(line['value'])
+        else:
+            cr.append((line['value']))
+        return '\n'
+
+    text = RE_NEW_LINE.sub(repl, text)
+    return text, lf, cr, crlf
+
+
+def strip_buffer_glyphs(view):
     """Strip all glyphs from buffer to load back into view."""
 
-    new_line_glyph = new_line if glyph else ""
-    return re.sub(r"\r*%s?\n|\r" % new_line_glyph, "\n", text)
-
-
-def use_newline_glyph():
-    """Use the newline glyph."""
-
-    return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_newline_glyph", False))
-
-
-def use_theme():
-    """Use the raw line theme to highlight line endings."""
-
-    return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("use_raw_line_edit_theme", False))
+    line = -1
+    more = True
+    last_value = -1
+    lines = []
+    mappings = {'crlf': '\r\n', 'cr': '\r', 'lf': '\n'}
+    while more:
+        line += 1
+        value = view.text_point(line, 0)
+        region = None
+        for line_type in ('crlf', 'cr', 'lf'):
+            regions = view.get_regions('rle_line_%d_%s' % (line, line_type))
+            if regions:
+                view.erase_regions('rle_line_%d_%s' % (line, line_type))
+                region = regions[0]
+                break
+        if region is not None:
+            view.erase_phantoms('rle_line_%d' % line)
+            lines.append(view.substr(view.line(region)) + mappings[line_type])
+        if value == last_value:
+            more = False
+        last_value = value
+    return ''.join(lines)
 
 
 def convert_buffers():
@@ -131,13 +156,10 @@ class RawLineTextBuffer(object):
     view = None
 
     @classmethod
-    def set_buffer(cls, view, use_glyph):
+    def set_buffer(cls, view):
         """Read buffer from view and strip new line glyphs."""
 
-        cls.bfr = strip_buffer_glyphs(
-            view.substr(sublime.Region(0, view.size())),
-            use_glyph
-        )
+        cls.bfr = strip_buffer_glyphs(view)
 
     @classmethod
     def clear_buffer(cls):
@@ -190,13 +212,12 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         settings = self.view.settings()
         file_name = settings.get("RawLineEditFilename")
         syntax = settings.get("RawLineEditSyntax")
-        use_glyph = settings.get("RawLineEditGlyph")
         buffer_endings = settings.get("RawLineBuffer", None)
 
         # Strip the buffer of glyphs and prepare to write
         # the stripped buffer back to the view
         if buffer_endings is not None:
-            RawLineTextBuffer.set_buffer(self.view, use_glyph)
+            RawLineTextBuffer.set_buffer(self.view)
 
         # Open temp view if only one view is open,
         # so not to close the window when we remove the view.
@@ -279,21 +300,47 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         Present the info in raw line view.
         """
         with codecs.open(file_name, "r", encoding) as f:
-            use_glyph = use_newline_glyph()
-            if use_glyph:
-                self.view.replace(edit, sublime.Region(0, self.view.size()), add_newline_glyph(f.read()))
-            else:
-                self.view.replace(edit, sublime.Region(0, self.view.size()), f.read())
+            text, lf, cr, crlf = process_lines(f.read())
+            self.view.replace(edit, sublime.Region(0, self.view.size()), text)
             self.view.set_line_endings("Unix")
             settings = self.view.settings()
-            settings.set("RawLineEditGlyph", use_glyph)
             settings.set("RawLineEdit", True)
             settings.set("RawLineEditSyntax", settings.get('syntax'))
             settings.set("RawLineEditFilename", file_name)
-            if use_theme():
-                self.view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.%s" % ST_SYNTAX)
+            self.view.assign_syntax(settings.get('syntax'))
             self.view.set_scratch(True)
             self.view.set_read_only(True)
+
+            for line in crlf:
+                pt = self.view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                self.view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¤</span><span>¬</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                self.view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
+            for line in cr:
+                pt = self.view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                self.view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¤</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                self.view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
+            for line in lf:
+                pt = self.view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                self.view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¬</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                self.view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
 
     def read_buffer(self):
         """Read the unsaved buffer and replace with new line glyphs."""
@@ -314,23 +361,48 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
 
         if self.view.is_read_only():
             self.view.set_read_only(False)
-        use_glyph = use_newline_glyph()
-        if use_glyph:
-            self.view.replace(edit, sublime.Region(0, self.view.size()), add_newline_glyph(self.read_buffer()))
-        else:
-            self.view.replace(edit, sublime.Region(0, self.view.size()), self.read_buffer())
         settings = self.view.settings()
-        settings.set("RawLineEditGlyph", use_glyph)
+        self.view.settings().set("RawLineBuffer", self.view.line_endings())
+        text, lf, cr, crlf = process_lines(self.read_buffer())
+        self.view.replace(edit, sublime.Region(0, self.view.size()), text)
+        self.view.set_line_endings("Unix")
         settings.set("RawLineEdit", True)
         settings.set("RawLineEditSyntax", self.view.settings().get('syntax'))
-        self.view.settings().set("RawLineBuffer", self.view.line_endings())
         if file_name is not None:
             settings.set("RawLineEditFilename", file_name)
-        self.view.set_line_endings("Unix")
-        if use_theme():
-            self.view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
         self.view.set_scratch(True)
         self.view.set_read_only(True)
+
+        for line in crlf:
+            pt = self.view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            self.view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¤</span><span>¬</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            self.view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
+        for line in cr:
+            pt = self.view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            self.view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¤</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            self.view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
+        for line in lf:
+            pt = self.view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            self.view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¬</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            self.view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
 
     def disable_buffer_rle(self, edit):
         """Disable the raw line mode on an unsaved buffer."""
@@ -344,12 +416,8 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
         new_view = win.new_file()
         settings = self.view.settings()
         syntax = settings.get("RawLineEditSyntax")
-        use_glyph = settings.get("RawLineEditGlyph")
         line_endings = settings.get("RawLineBuffer")
-        bfr = strip_buffer_glyphs(
-            self.view.substr(sublime.Region(0, self.view.size())),
-            use_glyph
-        )
+        bfr = strip_buffer_glyphs(self.view)
         new_view.replace(edit, sublime.Region(0, self.view.size()), bfr)
         new_view.set_line_endings(line_endings)
         new_view.set_syntax_file(syntax)
@@ -445,26 +513,52 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         view = self.view.window().get_output_panel('raw_line_edit_view')
         view.set_line_endings("Unix")
         view.set_read_only(False)
-        use_glyph = use_newline_glyph()
+
         RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
-        if use_glyph:
-            RawLinesEditReplaceCommand.text = add_newline_glyph(self.read_buffer())
-        else:
-            RawLinesEditReplaceCommand.text = self.read_buffer()
+        RawLinesEditReplaceCommand.text, lf, cr, crlf = process_lines(self.read_buffer())
         view.run_command("raw_lines_edit_replace")
         view.sel().clear()
         settings = view.settings()
-        settings.set("RawLineEditGlyph", use_glyph)
+        view.assign_syntax(self.view.settings().get('syntax'))
         settings.set("RawLineEdit", True)
         settings.set("RawLineEditSyntax", self.view.settings().get('syntax'))
         settings.set("RawLineEditPopup", True)
         settings.set("RawLineBuffer", self.view.line_endings())
         if file_name is not None:
             settings.set("RawLineEditFilename", file_name)
-        if use_theme():
-            view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
         view.set_scratch(True)
         view.set_read_only(True)
+        for line in crlf:
+            pt = view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¤</span><span>¬</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
+        for line in cr:
+            pt = view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¤</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
+        for line in lf:
+            pt = view.text_point(line + 1, 0) - 1
+            region = sublime.Region(pt)
+            view.add_phantom(
+                'rle_line_%d' % line,
+                region,
+                '%s<span>¬</span>' % CSS,
+                sublime.LAYOUT_INLINE
+            )
+            view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
+
         self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
 
     def show_rle(self, file_name, encoding):
@@ -475,26 +569,47 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
             view.set_line_endings("Unix")
             with codecs.open(file_name, "r", encoding) as f:
                 view.set_read_only(False)
-                use_glyph = use_newline_glyph()
                 RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
-                if use_glyph:
-                    RawLinesEditReplaceCommand.text = add_newline_glyph(f.read())
-                else:
-                    RawLinesEditReplaceCommand.text = f.read()
+                RawLinesEditReplaceCommand.text, lf, cr, crlf = process_lines(f.read())
                 view.run_command("raw_lines_edit_replace")
                 view.sel().clear()
-                if not use_theme():
-                    syntax_file = self.view.settings().get('syntax')
-                else:
-                    syntax_file = "Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage"
-                view.set_syntax_file(syntax_file)
+                view.assign_syntax(self.view.settings().get('syntax'))
                 view.settings().set("RawLineEditSyntax", self.view.settings().get('syntax'))
-                view.settings().set("RawLineEditGlyph", use_glyph)
                 view.settings().set("RawLineEdit", True)
                 view.settings().set("RawLineEditFilename", file_name)
                 view.settings().set("RawLineEditPopup", True)
                 view.set_scratch(True)
                 view.set_read_only(True)
+                for line in crlf:
+                    pt = view.text_point(line + 1, 0) - 1
+                    region = sublime.Region(pt)
+                    view.add_phantom(
+                        'rle_line_%d' % line,
+                        region,
+                        '%s<span>¤</span><span>¬</span>' % CSS,
+                        sublime.LAYOUT_INLINE
+                    )
+                    view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
+                for line in cr:
+                    pt = view.text_point(line + 1, 0) - 1
+                    region = sublime.Region(pt)
+                    view.add_phantom(
+                        'rle_line_%d' % line,
+                        region,
+                        '%s<span>¤</span>' % CSS,
+                        sublime.LAYOUT_INLINE
+                    )
+                    view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
+                for line in lf:
+                    pt = view.text_point(line + 1, 0) - 1
+                    region = sublime.Region(pt)
+                    view.add_phantom(
+                        'rle_line_%d' % line,
+                        region,
+                        '%s<span>¬</span>' % CSS,
+                        sublime.LAYOUT_INLINE
+                    )
+                    view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
                 self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
         except Exception:
             self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
@@ -520,16 +635,39 @@ class RawLineInsertCommand(sublime_plugin.TextCommand):
     def run(self, edit, style="Unix"):
         """Insert text."""
 
-        self.view.set_scratch(False)
-        self.view.set_read_only(False)
-        use_glyph = self.view.settings().get("RawLineEditGlyph")
         for s in reversed(self.view.sel()):
-            line_region = self.view.full_line(s)
-            if style == "Unix":
-                self.view.replace(edit, line_region, strip_carriage_returns(self.view.substr(line_region), use_glyph))
-            else:
-                self.view.replace(edit, line_region, add_carriage_returns(self.view.substr(line_region), use_glyph))
-        self.view.set_read_only(True)
+            line_regions = self.view.lines(s)
+            for region in line_regions:
+                row = self.view.rowcol(region.begin())[0]
+                if row >= 0:
+                    r = None
+                    for line_type in ('crlf', 'cr', 'lf'):
+                        temp = self.view.get_regions('rle_line_%d_%s' % (row, line_type))
+                        if temp:
+                            r = temp[0]
+                            break
+                    if r is not None:
+                        self.view.erase_regions('rle_line_%d_%s' % (row, line_type))
+                        self.view.erase_phantoms('rle_line_%d' % row)
+
+                        pt = self.view.text_point(row + 1, 0) - 1
+                        r = sublime.Region(pt)
+                        if style == "Unix":
+                            temp = '%s<span>¬</span>'
+                            line_type = 'lf'
+                        elif style == "Windows":
+                            temp = '%s<span>¤</span><span>¬</span>'
+                            line_type = 'crlf'
+                        else:
+                            temp = '%s<span>¤</span>'
+                            line_type = 'cr'
+                        self.view.add_phantom(
+                            'rle_line_%d' % row,
+                            r,
+                            temp % CSS,
+                            sublime.LAYOUT_INLINE
+                        )
+                        self.view.add_regions('rle_line_%d_%s' % (row, line_type), [r], '', '', sublime.HIDDEN)
 
 
 class RawLinesEditReplaceCommand(sublime_plugin.TextCommand):
@@ -555,12 +693,8 @@ class RawLineEditListener(sublime_plugin.EventListener):
         """Convert raw line mode back to normal mode before save."""
 
         if view.settings().get("RawLineEdit", False) and not view.settings().get('RawLineEditPopup', False):
-            use_glyph = view.settings().get("RawLineEditGlyph")
             RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
-            if use_glyph:
-                RawLinesEditReplaceCommand.text = strip_newline_glyph(view.substr(RawLinesEditReplaceCommand.region))
-            else:
-                RawLinesEditReplaceCommand.text = view.substr(RawLinesEditReplaceCommand.region)
+            RawLinesEditReplaceCommand.text = strip_buffer_glyphs(view)
             view.set_read_only(False)
             view.run_command("raw_lines_edit_replace")
             view.set_read_only(True)
@@ -574,17 +708,47 @@ class RawLineEditListener(sublime_plugin.EventListener):
                 view.settings().set("RawLineEditFilename", file_name)
             if view.settings().set("RawLineBuffer", None) is not None:
                 view.settings().erase("RawLineBuffer")
-            use_glyph = view.settings().get("RawLineEditGlyph")
-            RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
-            if use_glyph:
-                RawLinesEditReplaceCommand.text = add_newline_glyph(view.substr(RawLinesEditReplaceCommand.region))
-            else:
-                RawLinesEditReplaceCommand.text = view.substr(RawLinesEditReplaceCommand.region)
+
             view.set_read_only(False)
+            RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
+            RawLinesEditReplaceCommand.text, lf, cr, crlf = process_lines(
+                view.substr(RawLinesEditReplaceCommand.region)
+            )
             view.run_command("raw_lines_edit_replace")
+
+            for line in crlf:
+                pt = view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¤</span><span>¬</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
+            for line in cr:
+                pt = view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¤</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
+            for line in lf:
+                pt = view.text_point(line + 1, 0) - 1
+                region = sublime.Region(pt)
+                view.add_phantom(
+                    'rle_line_%d' % line,
+                    region,
+                    '%s<span>¬</span>' % CSS,
+                    sublime.LAYOUT_INLINE
+                )
+                view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
+
             view.set_scratch(True)
             view.set_read_only(True)
-            view.set_syntax_file("Packages/RawLineEdit/RawLineEdit.hidden-tmLanguage")
 
     def on_query_context(self, view, key, operator, operand, match_all):
         """Handle raw line mode shortcuts."""
