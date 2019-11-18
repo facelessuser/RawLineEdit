@@ -5,7 +5,7 @@ import textwrap
 import webbrowser
 import re
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 __pc_name__ = 'RawLineEdit'
 
 CSS = '''
@@ -109,7 +109,7 @@ class RawLineEditOpenSiteCommand(sublime_plugin.ApplicationCommand):
     """Open site links."""
 
     def run(self, url):
-        """Open the url."""
+        """Open the URL."""
 
         webbrowser.open_new_tab(url)
 
