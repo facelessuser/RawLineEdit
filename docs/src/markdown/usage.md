@@ -2,23 +2,15 @@
 
 ## General Usage
 
-Toggle the current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle` (you can setup your own keybinding or add it to your context menu if you choose).
+Toggle the current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle Line Edit Mode`.
+To simply view the raw line endings in a output panel, call the command `Raw Line Edit: View Line Endings`.
 
-Using the ++enter++ key you can change a line ending to Windows style, to Linux/Unix style with ++shift+enter++, or even macOS 9 with ++ctrl+enter++.  Select multiple lines to change more than one line.
+Using the ++enter++ key you can change a line ending to Windows style, to Linux/Unix style with ++shift+enter++, or even
+macOS 9 with ++ctrl+enter++.  Select multiple lines to change more than one line.
 
 ## Settings
 
 RawLineEdit has a few settings that can tweak the behavior and look of the plugin.
-
-### `view_only`
-
-Instead of opening a read/write view, RawLineEdit will open up a read only output panel.
-
-```js
-    // View only mode: pops up an output panel showing line endings.
-    // No editing possible.
-    "view_only": false,
-```
 
 ### `operate_on_unsaved_buffers`
 
@@ -43,35 +35,11 @@ Enables sending messages through the [SubNotify][subnotify] plugin.
     "use_sub_notify": true,
 ```
 
-## `Colorize Line Endings`
+## Create Key Bindings
 
-When the [use_raw_line_edit_theme](#use_raw_line_edit_theme) is enabled, RawLineEdit will use a special language file so that a theme can colorize the line endings.  In order to get the special colors, you must add special keys to your current tmTheme file.
+To enable raw line edit/view mode via a keybinding you can bind the following commands:
 
-Here are the keys; you can specify whatever color you like:
-
-```xml
-        <dict>
-            <key>name</key>
-            <string>Raw New Line: Carriage Return</string>
-            <key>scope</key>
-            <string>glyph.carriage-return</string>
-            <key>settings</key>
-            <dict>
-                <key>foreground</key>
-                <string>#66CCCC</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>name</key>
-            <string>Raw New Line: New Line Glyph</string>
-            <key>scope</key>
-            <string>glyph.new-line</string>
-            <key>settings</key>
-            <dict>
-                <key>foreground</key>
-                <string>#F2777A</string>
-            </dict>
-        </dict>
-```
+- `toggle_raw_line_edit`: a command for create a view where you can view and modify line endings.
+- `popup_raw_line_edit`: creates an output panel with a read only view of the line endings.
 
 --8<-- "refs.md"

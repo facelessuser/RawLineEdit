@@ -3,7 +3,7 @@
     // Raw Line Edit
     //////////////////////////////////
     {
-        "caption": "Raw Line Edit: Toggle",
+        "caption": "Raw Line Edit: Toggle Line Edit Mode",
         "command": "toggle_raw_line_edit"
     },
     {
