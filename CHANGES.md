@@ -6,6 +6,7 @@
 - **NEW**: Raw Line views will always use the same syntax as the original view.
 - **NEW**: Raw Line views, due to change in implementation (phantoms), can now properly handle toggling between macOS 9
   `\r`, Windows `\r\n`, and Linux/Unix `\n` line endings.
+- **NEW**: Remove `view_only` setting as you can now call either the edit command or the view command as desired.
 
 # RawLineEdit 1.2.1
 

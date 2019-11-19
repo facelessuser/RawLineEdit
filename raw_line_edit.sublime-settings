@@ -2,10 +2,6 @@
     // Use subnotify if available
     "use_sub_notify": true,
 
-    // View only mode: pops up a output panel showing line endings.
-    // No editing possible.
-    "view_only": false,
-
     // Operate on sublime unsaved view buffer
     // Instead of reading the file from disk,
     // The file will be read directly from the buffer

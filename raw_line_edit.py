@@ -400,13 +400,6 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             )
             self.view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
 
-    def is_enabled(self):
-        """Check if enabled."""
-
-        p_settings = sublime.load_settings("raw_line_edit.sublime-settings")
-        v_settings = self.view.settings()
-        return not bool(p_settings.get("view_only", False)) or v_settings.get("RawLineEdit", False)
-
     def run(self, edit):
         """Toggle the raw line mode."""
 
@@ -566,11 +559,6 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                 sublime.LAYOUT_INLINE
             )
             view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
-
-    def is_enabled(self):
-        """Check if command is enabled."""
-
-        return bool(sublime.load_settings("raw_line_edit.sublime-settings").get("view_only", False))
 
     def run(self, edit):
         """Popup panel with raw line view."""
