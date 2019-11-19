@@ -94,7 +94,6 @@ class RawLineEditSupportInfoCommand(sublime_plugin.ApplicationCommand):
             - Plugin ver.: %(plugin_version)s
             - Install via PC: %(pc_install)s
             - mdpopups ver.: %(mdpopups_version)s
-            - backrefs ver.: %(backrefs_version)s
             - markdown ver.: %(markdown_version)s
             - pygments ver.: %(pygments_version)s
             - jinja2 ver.: %(jinja_version)s

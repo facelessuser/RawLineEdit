@@ -1,10 +1,13 @@
 [
     {
+        "caption": "Preferences",
+        "mnemonic": "n",
         "id": "preferences",
         "children":
         [
             {
                 "caption": "Package Settings",
+                "mnemonic": "P",
                 "id": "package-settings",
                 "children":
                 [
@@ -13,19 +16,37 @@
                         "children":
                         [
                             {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/RawLineEdit/raw_line_edit.sublime-settings"
+                                "command": "edit_settings", "args": {
+                                    "base_file": "${packages}/RawLineEdit/raw_line_edit.sublime-settings",
+                                    "default": "{\n$0\n}\n"
                                 },
-                                "caption": "Settings – Default"
+                                "caption": "Settings"
+                            },
+                            { "caption": "-" },
+                            {
+                                "caption": "Changelog",
+                                "command": "raw_line_edit_changes"
                             },
                             {
-                                "command": "open_file", "args":
-                                {
-                                    "file": "${packages}/User/raw_line_edit.sublime-settings"
-                                },
-                                "caption": "Settings – User"
-                            }
+                                "caption": "Documentation",
+                                "command": "export_html_open_site",
+                                "args": {
+                                    "url": "http://facelessuser.github.io/RawLineEdit/"
+                                }
+                            },
+                            { "caption": "-" },
+                            {
+                                "caption": "Support Info",
+                                "command": "raw_line_edit_support_info"
+                            },
+                            {
+                                "caption": "Issues",
+                                "command": "raw_line_edit_open_site",
+                                "args": {
+                                    "url": "https://github.com/facelessuser/RawLineEdit/issues"
+                                }
+                            },
+                            { "caption": "-" }
                         ]
                     }
                 ]
