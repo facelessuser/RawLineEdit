@@ -311,36 +311,7 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             self.view.set_scratch(True)
             self.view.set_read_only(True)
 
-            for line in crlf:
-                pt = self.view.text_point(line + 1, 0) - 1
-                region = sublime.Region(pt)
-                self.view.add_phantom(
-                    'rle_line_%d' % line,
-                    region,
-                    '%s<span>¤</span><span>¬</span>' % CSS,
-                    sublime.LAYOUT_INLINE
-                )
-                self.view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
-            for line in cr:
-                pt = self.view.text_point(line + 1, 0) - 1
-                region = sublime.Region(pt)
-                self.view.add_phantom(
-                    'rle_line_%d' % line,
-                    region,
-                    '%s<span>¤</span>' % CSS,
-                    sublime.LAYOUT_INLINE
-                )
-                self.view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
-            for line in lf:
-                pt = self.view.text_point(line + 1, 0) - 1
-                region = sublime.Region(pt)
-                self.view.add_phantom(
-                    'rle_line_%d' % line,
-                    region,
-                    '%s<span>¬</span>' % CSS,
-                    sublime.LAYOUT_INLINE
-                )
-                self.view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
+            self.update_phantoms(crlf, cr, lf)
 
     def read_buffer(self):
         """Read the unsaved buffer and replace with new line glyphs."""
@@ -372,6 +343,31 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
             settings.set("RawLineEditFilename", file_name)
         self.view.set_scratch(True)
         self.view.set_read_only(True)
+        self.update_phantoms(crlf, cr, lf)
+
+    def disable_buffer_rle(self, edit):
+        """Disable the raw line mode on an unsaved buffer."""
+
+        if self.view.is_dirty():
+            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?", "Save"):
+                self.view.run_command("save")
+                self.disable_rle(edit)
+                return
+        win = self.view.window()
+        new_view = win.new_file()
+        settings = self.view.settings()
+        syntax = settings.get("RawLineEditSyntax")
+        line_endings = settings.get("RawLineBuffer")
+        bfr = strip_buffer_glyphs(self.view)
+        new_view.replace(edit, sublime.Region(0, self.view.size()), bfr)
+        new_view.set_line_endings(line_endings)
+        new_view.set_syntax_file(syntax)
+        win.focus_view(self.view)
+        win.run_command("close_file")
+        win.focus_view(new_view)
+
+    def update_phantoms(self, crlf, cr, lf):
+        """Update phantoms."""
 
         for line in crlf:
             pt = self.view.text_point(line + 1, 0) - 1
@@ -403,27 +399,6 @@ class ToggleRawLineEditCommand(sublime_plugin.TextCommand):
                 sublime.LAYOUT_INLINE
             )
             self.view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
-
-    def disable_buffer_rle(self, edit):
-        """Disable the raw line mode on an unsaved buffer."""
-
-        if self.view.is_dirty():
-            if sublime.ok_cancel_dialog("Raw Line Edit:\nFile has unsaved changes.  Save?", "Save"):
-                self.view.run_command("save")
-                self.disable_rle(edit)
-                return
-        win = self.view.window()
-        new_view = win.new_file()
-        settings = self.view.settings()
-        syntax = settings.get("RawLineEditSyntax")
-        line_endings = settings.get("RawLineBuffer")
-        bfr = strip_buffer_glyphs(self.view)
-        new_view.replace(edit, sublime.Region(0, self.view.size()), bfr)
-        new_view.set_line_endings(line_endings)
-        new_view.set_syntax_file(syntax)
-        win.focus_view(self.view)
-        win.run_command("close_file")
-        win.focus_view(new_view)
 
     def is_enabled(self):
         """Check if enabled."""
@@ -528,6 +503,39 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
             settings.set("RawLineEditFilename", file_name)
         view.set_scratch(True)
         view.set_read_only(True)
+
+        self.update_phantoms(view, crlf, cr, lf)
+        self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
+
+    def show_rle(self, file_name, encoding):
+        """Show the raw line view popup."""
+
+        try:
+            view = self.view.window().get_output_panel('raw_line_edit_view')
+            view.set_line_endings("Unix")
+            with codecs.open(file_name, "r", encoding) as f:
+                view.set_read_only(False)
+                RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
+                RawLinesEditReplaceCommand.text, lf, cr, crlf = process_lines(f.read())
+                view.run_command("raw_lines_edit_replace")
+                view.sel().clear()
+                view.assign_syntax(self.view.settings().get('syntax'))
+                view.settings().set("RawLineEditSyntax", self.view.settings().get('syntax'))
+                view.settings().set("RawLineEdit", True)
+                view.settings().set("RawLineEditFilename", file_name)
+                view.settings().set("RawLineEditPopup", True)
+                view.set_scratch(True)
+                view.set_read_only(True)
+
+                self.update_phantoms(view, crlf, cr, lf)
+                self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
+        except Exception:
+            self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
+            raise
+
+    def update_phantoms(self, view, crlf, cr, lf):
+        """Update phantoms."""
+
         for line in crlf:
             pt = view.text_point(line + 1, 0) - 1
             region = sublime.Region(pt)
@@ -558,62 +566,6 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
                 sublime.LAYOUT_INLINE
             )
             view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
-
-        self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
-
-    def show_rle(self, file_name, encoding):
-        """Show the raw line view popup."""
-
-        try:
-            view = self.view.window().get_output_panel('raw_line_edit_view')
-            view.set_line_endings("Unix")
-            with codecs.open(file_name, "r", encoding) as f:
-                view.set_read_only(False)
-                RawLinesEditReplaceCommand.region = sublime.Region(0, view.size())
-                RawLinesEditReplaceCommand.text, lf, cr, crlf = process_lines(f.read())
-                view.run_command("raw_lines_edit_replace")
-                view.sel().clear()
-                view.assign_syntax(self.view.settings().get('syntax'))
-                view.settings().set("RawLineEditSyntax", self.view.settings().get('syntax'))
-                view.settings().set("RawLineEdit", True)
-                view.settings().set("RawLineEditFilename", file_name)
-                view.settings().set("RawLineEditPopup", True)
-                view.set_scratch(True)
-                view.set_read_only(True)
-                for line in crlf:
-                    pt = view.text_point(line + 1, 0) - 1
-                    region = sublime.Region(pt)
-                    view.add_phantom(
-                        'rle_line_%d' % line,
-                        region,
-                        '%s<span>¤</span><span>¬</span>' % CSS,
-                        sublime.LAYOUT_INLINE
-                    )
-                    view.add_regions('rle_line_%d_crlf' % line, [region], '', '', sublime.HIDDEN)
-                for line in cr:
-                    pt = view.text_point(line + 1, 0) - 1
-                    region = sublime.Region(pt)
-                    view.add_phantom(
-                        'rle_line_%d' % line,
-                        region,
-                        '%s<span>¤</span>' % CSS,
-                        sublime.LAYOUT_INLINE
-                    )
-                    view.add_regions('rle_line_%d_cr' % line, [region], '', '', sublime.HIDDEN)
-                for line in lf:
-                    pt = view.text_point(line + 1, 0) - 1
-                    region = sublime.Region(pt)
-                    view.add_phantom(
-                        'rle_line_%d' % line,
-                        region,
-                        '%s<span>¬</span>' % CSS,
-                        sublime.LAYOUT_INLINE
-                    )
-                    view.add_regions('rle_line_%d_lf' % line, [region], '', '', sublime.HIDDEN)
-                self.view.window().run_command("show_panel", {"panel": "output.raw_line_edit_view"})
-        except Exception:
-            self.view.window().run_command("hide_panel", {"panel": "output.raw_line_edit_view"})
-            raise
 
     def is_enabled(self):
         """Check if command is enabled."""
