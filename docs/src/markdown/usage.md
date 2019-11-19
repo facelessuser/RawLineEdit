@@ -37,7 +37,7 @@ Enables sending messages through the [SubNotify][subnotify] plugin.
 
 ## Create Key Bindings
 
-To enable raw line edit\view mode via a keybinding you can bind the following commands:
+To enable raw line edit/view mode via a keybinding you can bind the following commands:
 
 - `toggle_raw_line_edit`: a command for create a view where you can view and modify line endings.
 - `popup_raw_line_edit`: creates an output panel with a read only view of the line endings.
