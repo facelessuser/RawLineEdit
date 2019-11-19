@@ -4,33 +4,11 @@
 
 Toggle the current view to a "RawLineEdit" view via the command palette command `Raw Line Edit: Toggle` (you can setup your own keybinding or add it to your context menu if you choose).
 
-Using the ++enter++ key you can change Windows style line endings to Unix or use ++shift+enter++ to do the opposite.  Select multiple lines to change more than one line.
+Using the ++enter++ key you can change a line ending to Windows style, to Linux/Unix style with ++shift+enter++, or even macOS 9 with ++ctrl+enter++.  Select multiple lines to change more than one line.
 
 ## Settings
 
 RawLineEdit has a few settings that can tweak the behavior and look of the plugin.
-
-### `use_newline_glyph`
-
-Sublime Text 3 will show a special glyph for carriage returns, but they show nothing for normal new lines.  This setting will enable showing a `¬` character for newlines.
-
-```js
-    // Use a glyph for a visual representation
-    // for newlines
-    "use_newline_glyph": true,
-```
-
-### `use_raw_line_edit_theme`
-
-Uses a special language file so that a theme can colorize the line endings.  See [Colorize Line Endings](#colorize-line-endings) for more info.
-
-```js
-    // Use the raw line edit theme to allow
-    // a view that highlights only new lines
-    // and carriage returns for easy visualization.
-    // (Colors customizable via your color scheme file)
-    "use_raw_line_edit_theme": true,
-```
 
 ### `view_only`
 

@@ -23,5 +23,16 @@
             }
         ],
         "args": { "style": "Windows" }
+    },
+    {
+        "keys": ["ctrl+enter"],
+        "command": "raw_line_insert",
+        "context":
+        [
+            {
+                "key": "raw_line_edit"
+            }
+        ],
+        "args": { "style": "MacOS" }
     }
 ]
