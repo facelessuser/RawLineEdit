@@ -1,4 +1,10 @@
-# RawLineEdit 2.0.0
+#RawLineEdit
+
+## 2.0.1
+
+- **FIX**: Fix installation message referring to non-existent quick start guide.
+
+## 2.0.0
 
 - **NEW**: When view is unsaved, allow the ability to save, continue without saving, and canceling when using popup
   output.
@@ -8,22 +14,18 @@
   `\r`, Windows `\r\n`, and Linux/Unix `\n` line endings.
 - **NEW**: Remove `view_only` setting as you can now call either the edit command or the view command as desired.
 
-# RawLineEdit 1.2.1
+## 1.2.1
 
 - **FIX**: When view is unsaved, allow the ability to save, continue without saving, and canceling.
 
-# RawLineEdit 1.2.0
-
-Jun 7, 2015
+## 1.2.0
 
 - **FIX**: Update dependencies.
 
-# RawLineEdit 1.1.0
-
-Feb 10, 2015
+## 1.1.0
 
 - **NEW**: Migrate to tag releases.
 
-# RawLineEdit 1.0.0
+## 1.0.0
 
 - **NEW**: Initial release.
