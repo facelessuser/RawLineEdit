@@ -58,7 +58,8 @@ markdown_extensions:
   - pymdownx.caret:
   - pymdownx.smartsymbols:
   - pymdownx.emoji:
-      emoji_generator: !!python/name:pymdownx.emoji.to_png
+      emoji_index: !!python/name:pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
   - pymdownx.escapeall:
       hardbreak: true
       nbsp: true
@@ -77,6 +78,6 @@ extra:
     - type: github
       link: https://github.com/facelessuser
 extra_css:
-  - extra-c507967d85.css
+  - extra-174a536342.css
 extra_javascript:
-  - extra-d8800ea088.js
+  - extra-0d9305e748.js
