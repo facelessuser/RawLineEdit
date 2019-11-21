@@ -33,6 +33,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 [github-ci-image]: https://github.com/facelessuser/RawLineEdit/workflows/build/badge.svg
 [github-ci-link]: https://github.com/facelessuser/RawLineEdit/actions?workflow=build
-[pc-image]: https://img.shields.io/packagecontrol/dt/RawLineEdit.svg?logo=sublime%20text&logoColor=white
+[pc-image]: https://img.shields.io/packagecontrol/dt/RawLineEdit.svg?logo=sublime%20text&logoColor=cccccc
 [pc-link]: https://packagecontrol.io/packages/RawLineEdit
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
