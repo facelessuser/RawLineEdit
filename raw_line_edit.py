@@ -475,10 +475,19 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
             bfr.append(self.view.substr(line) + line_ending)
         return "".join(bfr)
 
+    def get_output_panel(self):
+        """Get output panel."""
+
+        win = self.view.window()
+        view = win.find_output_panel('raw_line_edit_view')
+        if view is not None:
+            win.destroy_output_panel('raw_line_edit_view')
+        return win.get_output_panel('raw_line_edit_view')
+
     def enable_buffer_rle(self, file_name=None):
         """Enable the raw line mode on an unsaved buffer."""
 
-        view = self.view.window().get_output_panel('raw_line_edit_view')
+        view = self.get_output_panel()
         view.set_line_endings("Unix")
         view.set_read_only(False)
 
@@ -504,7 +513,7 @@ class PopupRawLineEditCommand(sublime_plugin.TextCommand):
         """Show the raw line view popup."""
 
         try:
-            view = self.view.window().get_output_panel('raw_line_edit_view')
+            view = self.get_output_panel()
             view.set_line_endings("Unix")
             with codecs.open(file_name, "r", encoding) as f:
                 view.set_read_only(False)
