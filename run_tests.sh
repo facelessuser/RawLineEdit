@@ -1,2 +1,0 @@
-py.test .
-flake8 .

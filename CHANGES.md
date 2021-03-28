@@ -1,5 +1,9 @@
 #RawLineEdit
 
+## 2.0.2
+
+- **FIX**: Fix issue when viewing a file over and over old phantoms persist.
+
 ## 2.0.1
 
 - **FIX**: Fix installation message referring to non-existent quick start guide.

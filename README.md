@@ -1,3 +1,5 @@
+[![Donate via PayPal][donate-image]][donate-link]
+[![Discord][discord-image]][discord-link]
 [![Build][github-ci-image]][github-ci-link]
 [![Package Control Downloads][pc-image]][pc-link]
 ![License][license-image]
@@ -16,7 +18,7 @@ http://facelessuser.github.io/RawLineEdit/
 
 Raw Line Edit is released under the MIT license.
 
-Copyright (c) 2013 - 2019 Isaac Muse <isaacmuse@gmail.com>
+Copyright (c) 2013 - 2021 Isaac Muse <isaacmuse@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -36,3 +38,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 [pc-image]: https://img.shields.io/packagecontrol/dt/RawLineEdit.svg?logo=sublime%20text&logoColor=cccccc
 [pc-link]: https://packagecontrol.io/packages/RawLineEdit
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
+[discord-image]: https://img.shields.io/discord/678289859768745989?logo=discord&logoColor=aaaaaa&color=mediumpurple&labelColor=333333
+[discord-link]: https://discord.gg/TWs8Tgr
+[donate-image]: https://img.shields.io/badge/Donate-PayPal-3fabd1?logo=paypal
+[donate-link]: https://www.paypal.me/facelessuser

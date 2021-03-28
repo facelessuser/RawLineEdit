@@ -4,34 +4,38 @@ repo_url: https://github.com/facelessuser/RawLineEdit
 edit_uri: tree/master/docs/src/markdown
 site_description: View and edit raw lines in Sublime Text.
 copyright: |
-  Copyright &copy; 2013 - 2019 <a href="https://github.com/facelessuser">Isaac Muse</a>
-  <br><span class="md-footer-custom-text">emoji provided free by </span>
-  <a href="https://github.com/twitter/twemoji">Twemoji</a>
+  Copyright &copy; 2013 - 2021 <a href="https://github.com/facelessuser"  target="_blank" rel="noopener">Isaac Muse</a>
 
 docs_dir: docs/src/markdown
 theme:
   name: material
   custom_dir: docs/theme
+  icon:
+    logo: material/book-open-page-variant
   palette:
-    primary: blue
-    accent: blue
-  logo:
-    icon: description
+    scheme: dracula
+    primary: deep purple
+    accent: deep purple
   font:
     text: Roboto
     code: Roboto Mono
+  features:
+    - navigation.tabs
 
 nav:
-  - About RawLineEdit: index.md
-  - Installation: installation.md
-  - User Guide: usage.md
-  - Contributing &amp; Support: contributing.md
-  - License: license.md
+  - Home:
+    - RawLineEdit: index.md
+    - Installation: installation.md
+    - User Guide: usage.md
+  - About:
+    - Contributing &amp; Support: about/contributing.md
+    - Changelog: https://github.com/facelessuser/RawLineEdit/blob/master/CHANGES.md
+    - License: about/license.md
 
 markdown_extensions:
   - markdown.extensions.toc:
       slugify: !!python/name:pymdownx.slugs.uslugify
-      permalink: "\ue157"
+      permalink: ""
   - markdown.extensions.admonition:
   - markdown.extensions.smarty:
       smart_quotes: false
@@ -40,45 +44,58 @@ markdown_extensions:
   - markdown.extensions.def_list:
   - markdown.extensions.tables:
   - markdown.extensions.abbr:
-  - pymdownx.extrarawhtml:
+  - markdown.extensions.footnotes:
+  - markdown.extensions.md_in_html:
   - pymdownx.superfences:
   - pymdownx.highlight:
-      css_class: codehilite
       extend_pygments_lang:
         - name: php-inline
           lang: php
           options:
             startinline: true
+        - name: pycon3
+          lang: pycon
+          options:
+            python3: true
   - pymdownx.inlinehilite:
   - pymdownx.magiclink:
       repo_url_shortener: true
       repo_url_shorthand: true
+      social_url_shorthand: true
       user: facelessuser
       repo: RawLineEdit
   - pymdownx.tilde:
   - pymdownx.caret:
   - pymdownx.smartsymbols:
   - pymdownx.emoji:
-      emoji_index: !!python/name:pymdownx.emoji.twemoji
-      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.escapeall:
       hardbreak: true
       nbsp: true
   - pymdownx.tasklist:
       custom_checkbox: true
-  - pymdownx.progressbar:
+  - pymdownx.arithmatex:
+  - pymdownx.mark:
   - pymdownx.striphtml:
   - pymdownx.snippets:
       base_path: docs/src/markdown/_snippets
   - pymdownx.keys:
       separator: "\uff0b"
   - pymdownx.details:
+  - pymdownx.tabbed:
+  - pymdownx.saneheaders:
 
 extra:
   social:
-    - type: github
+    - icon: fontawesome/brands/github
       link: https://github.com/facelessuser
-extra_css:
-  - extra-174a536342.css
-extra_javascript:
-  - extra-0d9305e748.js
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/TWs8Tgr
+
+plugins:
+  - search
+  - git-revision-date-localized
+  - mkdocs_pymdownx_material_extras
+  - minify:
+      minify_html: true
