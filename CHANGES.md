@@ -2,7 +2,7 @@
 
 ## 2.0.3
 
--   **FIX**: Update dependenciest to remove uneeded ones and add `typing`.
+-   **FIX**: Update dependencies to remove uneeded ones and add `typing`.
 
 ## 2.0.2
 
