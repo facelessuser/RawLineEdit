@@ -1,4 +1,8 @@
-#RawLineEdit
+# RawLineEdit
+
+## 2.1.0
+
+-   **NEW**: Updates for Python 3.13 on ST 4201+.
 
 ## 2.0.3
 
