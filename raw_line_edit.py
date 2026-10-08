@@ -94,6 +94,9 @@ def strip_buffer_glyphs(view):
         if region is not None:
             view.erase_phantoms('rle_line_%d' % line)
             lines.append(view.substr(view.line(region)) + mappings[line_type])
+        elif value < view.size(): # text after the last NL-terminated region, don't lose it!
+            lines.append(view.substr(view.line(value )))
+            more = False
         if value == last_value:
             more = False
         last_value = value
