@@ -1,38 +1,21 @@
-[
-    //////////////////////////////////
-    // Raw Line Edit
-    //////////////////////////////////
-    {
-        "keys": ["enter"],
-        "command": "raw_line_insert",
-        "context":
-        [
-            {
-                "key": "raw_line_edit"
-            }
-        ],
-        "args": { "style": "Unix" }
-    },
-    {
-        "keys": ["shift+enter"],
-        "command": "raw_line_insert",
-        "context":
-        [
-            {
-                "key": "raw_line_edit"
-            }
-        ],
-        "args": { "style": "Windows" }
-    },
-    {
-        "keys": ["ctrl+enter"],
-        "command": "raw_line_insert",
-        "context":
-        [
-            {
-                "key": "raw_line_edit"
-            }
-        ],
-        "args": { "style": "MacOS" }
-    }
+[ // Raw Line Edit
+{"keys":["enter"      	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Unix"   }},
+{"keys":["shift+enter"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Windows"}},
+{"keys":["ctrl+enter" 	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"MacOS"  }},
+
+// Alternative easier one-letter newline changes
+// 𝐋ine feed,  carriage 𝐑eturn
+//{"keys":["l"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Unix"   }},
+//{"keys":["n"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Windows"}},
+//{"keys":["r"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"MacOS"  }},
+
+// line 𝐅eed,  𝐂arriage return, 𝐃ouble (CR+LF). Though mostly chosen since 2 most-frequent line endings are on the ASDF home row
+//{"keys":["f"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Unix"   }},
+//{"keys":["d"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Windows"}},
+//{"keys":["c"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"MacOS"  }},
+
+//{"keys":["1"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Unix"   }},
+//{"keys":["2"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"Windows"}},
+//{"keys":["3"	],"command":"raw_line_insert","context":[{"key":"raw_line_edit"}],"args":{"style":"MacOS"  }},
+
 ]

@@ -22,6 +22,9 @@
                                 },
                                 "caption": "Settings"
                             },
+                            {"caption":"Key Bindings", "id":"rawlinedit-keymap", "command":"edit_settings",
+                                "args": {"base_file":"${packages}/RawLineEdit/Default.sublime-keymap",
+                                "default": "/* ← See the left pane for defaults and alternatives */\n[\n$0\n]\n",},},
                             { "caption": "-" },
                             {
                                 "caption": "Changelog",

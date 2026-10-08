@@ -9,5 +9,8 @@
     {
         "caption": "Raw Line Edit: View Line Endings",
         "command": "popup_raw_line_edit"
-    }
+    },
+{"caption":"Raw Line Edit: Set Key Bindings", "command":"edit_settings",
+  "args": {"base_file":"${packages}/RawLineEdit/Default.sublime-keymap",
+  "default": "/* ← See the left pane for defaults and alternatives */\n[\n$0\n]\n",},},
 ]
