@@ -8,5 +8,31 @@
     // In these cases the line endings will be normalized,
     // but you can edit them and save them back to disk.
     // Not sure how useful this is.
-    "operate_on_unsaved_buffers": false
+    "operate_on_unsaved_buffers": false,
+
+// Custom symbols for…
+// "cr_symbol" :"¤"  ,//¤␍↩      …carriage return
+// "lf_symbol" :"¬"  ,//¬␤       …line feed
+// "crlf_symbol":null,//null ⏎⮒⌤ …Cr+Lf    uses "CR_symbol""LF_symbol" if null
+
+// Custom CSS style for the symbols popups, see sublimetext.com/docs/minihtml.html. Conversion from JSON is primivite, supports only 1 level of nesting
+// can also use custom styles for each symbol:  "css_cr"  "css_lf"  "css_crlf" for carriage return, line feed, Cr+Lf respectively
+// and even     custom styles for mixed line-ending files, e.g., to highlight ␍Carriage Returns that Sublime Text silently corrupts on save by normalizing it
+  //  "css_mix"   "css_cr_mix"   "css_lf_mix"   "css_crlf_mix"  for any line ending, ␍carriage return, ␤line feed, ␍␤Cr+Lf respectively
+// "css": [ // a list of CSS spans with their styles
+//   {"_T":"span", //_T stores the name of the span → "_T {}", the rest become "key: value;" lines
+//     "display"         	: "inline",
+//     "font-size"       	: "0.9rem",
+//     "font-weight"     	: "bold",
+//     "padding"         	: "0.05rem 0.25rem",
+//     "border-radius"   	: "0.25rem",
+//     "background-color"	: "var(--foreground)",
+//     "color"           	: "var(--background)",
+//     "border"          	: "1px solid var(--mdpopups-kbd-border)",
+//   },
+//   {"_T":"html.light span",
+//     "border":"1px solid color(var(--foreground) blend(white 80%))",},
+//   {"_T":"html.light span",
+//     "border":"1px solid color(var(--foreground) blend(black 80%))",},
+// ],
 }
